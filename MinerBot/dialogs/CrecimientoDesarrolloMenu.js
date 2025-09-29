@@ -1,22 +1,23 @@
-// dialogs/VacacionesMenu.js
+// dialogs/CrecimientoDesarrolloMenu.js
 const { MessageFactory } = require('botbuilder');
 const content = require('./content');
 
-const vacationOptions = [
-    'Solicitar vacaciones',
-    'Consultar saldo de vacaciones',
-    'Procedimiento de licencia médica',
-    'Tipos de Permisos Legales 📝' // <-- NUEVA OPCIÓN QUE ES UN MENÚ
+const crecimientoOptions = [
+    'Cursos externos financiados por la empresa',
+    'Programa de trainees o becas de estudio',
+    'Evaluación de desempeño y retroalimentación',
+    'Planes de carrera y movilidad interna',
+    'Programas de Capacitación Interna 📚'
 ];
 
-class VacacionesMenu {
+class CrecimientoDesarrolloMenu {
     constructor(bot) {
         this.bot = bot;
     }
 
     async show(context) {
         await context.sendActivity(
-            MessageFactory.suggestedActions(vacationOptions.concat(['Volver']), '📄 Vacaciones y Permisos')
+            MessageFactory.suggestedActions(crecimientoOptions.concat(['Volver']), '📚 Crecimiento y Desarrollo')
         );
     }
 
@@ -34,14 +35,12 @@ class VacacionesMenu {
             return true;
         }
 
-        // --- NUEVA NAVEGACIÓN A SUB-SUB-MENÚ ---
-        if (lower.includes('tipos de permisos legales')) {
-            await bot.navigateToMenu(context, conversationData, 'tiposPermisosLegales');
+        if (lower.includes('programas de capacitación interna')) {
+            await bot.navigateToMenu(context, conversationData, 'programasCapacitacionInterna');
             return true;
         }
-        // --- FIN NUEVA NAVEGACIÓN ---
 
-        const matchedOption = vacationOptions.find(opt => opt.toLowerCase() === lower);
+        const matchedOption = crecimientoOptions.find(opt => opt.toLowerCase() === lower);
 
         if (matchedOption) {
             const response = content[lower];
@@ -58,4 +57,4 @@ class VacacionesMenu {
     }
 }
 
-module.exports = VacacionesMenu;
+module.exports = CrecimientoDesarrolloMenu;

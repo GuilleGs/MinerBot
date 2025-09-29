@@ -1,22 +1,22 @@
-// dialogs/VacacionesMenu.js
+// dialogs/SaludSegurosMenu.js
 const { MessageFactory } = require('botbuilder');
 const content = require('./content');
 
-const vacationOptions = [
-    'Solicitar vacaciones',
-    'Consultar saldo de vacaciones',
-    'Procedimiento de licencia médica',
-    'Tipos de Permisos Legales 📝' // <-- NUEVA OPCIÓN QUE ES UN MENÚ
+const saludSegurosOptions = [
+    'Procedimiento de reembolso médico/dental',
+    'Beneficios de salud mental',
+    'Seguro de vida y cobertura en accidentes laborales',
+    'Tipos de Seguros de Salud ⚕️'
 ];
 
-class VacacionesMenu {
+class SaludSegurosMenu {
     constructor(bot) {
         this.bot = bot;
     }
 
     async show(context) {
         await context.sendActivity(
-            MessageFactory.suggestedActions(vacationOptions.concat(['Volver']), '📄 Vacaciones y Permisos')
+            MessageFactory.suggestedActions(saludSegurosOptions.concat(['Volver']), '💚 Salud y Seguros')
         );
     }
 
@@ -34,14 +34,12 @@ class VacacionesMenu {
             return true;
         }
 
-        // --- NUEVA NAVEGACIÓN A SUB-SUB-MENÚ ---
-        if (lower.includes('tipos de permisos legales')) {
-            await bot.navigateToMenu(context, conversationData, 'tiposPermisosLegales');
+        if (lower.includes('tipos de seguros de salud')) {
+            await bot.navigateToMenu(context, conversationData, 'tiposSegurosSalud');
             return true;
         }
-        // --- FIN NUEVA NAVEGACIÓN ---
 
-        const matchedOption = vacationOptions.find(opt => opt.toLowerCase() === lower);
+        const matchedOption = saludSegurosOptions.find(opt => opt.toLowerCase() === lower);
 
         if (matchedOption) {
             const response = content[lower];
@@ -58,4 +56,4 @@ class VacacionesMenu {
     }
 }
 
-module.exports = VacacionesMenu;
+module.exports = SaludSegurosMenu;

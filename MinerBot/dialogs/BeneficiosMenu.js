@@ -1,7 +1,8 @@
 // dialogs/BeneficiosMenu.js
 const { MessageFactory } = require('botbuilder');
+const content = require('./content');
 
-const options = [
+const benefitsOptions = [
     'Bonos de desempeño',
     'Asignación de escolaridad',
     'Aguinaldos y gratificaciones',
@@ -16,24 +17,49 @@ class BeneficiosMenu {
 
     async show(context) {
         await context.sendActivity(
-            MessageFactory.suggestedActions(options.concat(['Volver']), '💰 Beneficios Económicos')
+            MessageFactory.suggestedActions(benefitsOptions.concat(['Volver']), '💰 Beneficios Económicos')
         );
     }
 
-    async handleInput(context, text) {
+    /**
+     * @param {TurnContext} context
+     * @param {string} text
+     * @param {object} conversationData - El objeto de estado de la conversación.
+     * @param {MinerBot} bot - La instancia del bot para acceder a sus métodos de navegación.
+     * @returns {boolean} True si la entrada fue manejada, false en caso contrario.
+     */
+    async handleInput(context, text, conversationData, bot) { // Se recibe 'bot' para goBack
         const lower = text.toLowerCase();
 
-        if (lower.includes('volver')) {
-            const previous = this.bot.menuStack.pop();
-            if (previous) {
-                this.bot.currentMenu = previous;
-                await this.bot.currentMenu.show(context);
-            }
-            return true;
-        } else {
-            await context.sendActivity(`Has seleccionado: "${text}"`);
+        // --- INICIO DE CAMBIOS PARA EL COMPORTAMIENTO DE "VOLVER" ---
+        // Si el usuario está en un estado de display de información y escribe 'volver',
+        // simplemente mostramos las opciones del menú actual de nuevo.
+        if (conversationData.isInInfoDisplayState && lower.includes('volver')) {
+            conversationData.isInInfoDisplayState = false; // Resetea el flag
+            await this.show(context); // Vuelve a mostrar las opciones de BeneficiosMenu
             return true;
         }
+        // --- FIN DE CAMBIOS ---
+
+        if (lower.includes('volver')) {
+            await bot.goBack(context, conversationData); // Usa el método goBack del bot
+            return true;
+        }
+
+        const matchedOption = benefitsOptions.find(opt => opt.toLowerCase() === lower);
+
+        if (matchedOption) {
+            const response = content[lower];
+            if (response) {
+                await context.sendActivity(response);
+            } else {
+                await context.sendActivity(`Has seleccionado: "${text}" (No hay información detallada aún).`);
+            }
+            conversationData.isInInfoDisplayState = true; // <-- AÑADIDO: Establecer el flag
+            return true; // Se manejó una opción del menú
+        }
+
+        return false; // No se manejó ninguna opción del menú, dejar que MinerBot intente la KB
     }
 }
 

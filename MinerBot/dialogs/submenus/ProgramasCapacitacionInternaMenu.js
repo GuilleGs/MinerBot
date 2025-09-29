@@ -1,22 +1,21 @@
-// dialogs/VacacionesMenu.js
+// dialogs/submenus/ProgramasCapacitacionInternaMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('./content');
+const content = require('../content'); // Importante: ruta relativa
 
-const vacationOptions = [
-    'Solicitar vacaciones',
-    'Consultar saldo de vacaciones',
-    'Procedimiento de licencia médica',
-    'Tipos de Permisos Legales 📝' // <-- NUEVA OPCIÓN QUE ES UN MENÚ
+const capacitacionOptions = [
+    'Capacitación DCL (Desarrollo de Competencias de Liderazgo)',
+    'Capacitación LEA (Ley de Etiquetado de Alimentos, ejemplo)',
+    'Cursos Técnicos Específicos'
 ];
 
-class VacacionesMenu {
+class ProgramasCapacitacionInternaMenu {
     constructor(bot) {
         this.bot = bot;
     }
 
     async show(context) {
         await context.sendActivity(
-            MessageFactory.suggestedActions(vacationOptions.concat(['Volver']), '📄 Vacaciones y Permisos')
+            MessageFactory.suggestedActions(capacitacionOptions.concat(['Volver']), '📚 Programas de Capacitación Interna')
         );
     }
 
@@ -34,14 +33,7 @@ class VacacionesMenu {
             return true;
         }
 
-        // --- NUEVA NAVEGACIÓN A SUB-SUB-MENÚ ---
-        if (lower.includes('tipos de permisos legales')) {
-            await bot.navigateToMenu(context, conversationData, 'tiposPermisosLegales');
-            return true;
-        }
-        // --- FIN NUEVA NAVEGACIÓN ---
-
-        const matchedOption = vacationOptions.find(opt => opt.toLowerCase() === lower);
+        const matchedOption = capacitacionOptions.find(opt => opt.toLowerCase() === lower);
 
         if (matchedOption) {
             const response = content[lower];
@@ -58,4 +50,4 @@ class VacacionesMenu {
     }
 }
 
-module.exports = VacacionesMenu;
+module.exports = ProgramasCapacitacionInternaMenu;

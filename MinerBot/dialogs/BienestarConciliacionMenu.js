@@ -1,22 +1,22 @@
-// dialogs/VacacionesMenu.js
+// dialogs/BienestarConciliacionMenu.js
 const { MessageFactory } = require('botbuilder');
 const content = require('./content');
 
-const vacationOptions = [
-    'Solicitar vacaciones',
-    'Consultar saldo de vacaciones',
-    'Procedimiento de licencia médica',
-    'Tipos de Permisos Legales 📝' // <-- NUEVA OPCIÓN QUE ES UN MENÚ
+const bienestarOptions = [
+    'Programas de bienestar físico y psicológico',
+    'Iniciativas de conciliación vida-trabajo',
+    'Programas Internos 🏠',
+    'Apoyo Familiar 👨‍👩‍👧‍👦'
 ];
 
-class VacacionesMenu {
+class BienestarConciliacionMenu {
     constructor(bot) {
         this.bot = bot;
     }
 
     async show(context) {
         await context.sendActivity(
-            MessageFactory.suggestedActions(vacationOptions.concat(['Volver']), '📄 Vacaciones y Permisos')
+            MessageFactory.suggestedActions(bienestarOptions.concat(['Volver']), '🏠 Bienestar y Conciliación')
         );
     }
 
@@ -34,14 +34,15 @@ class VacacionesMenu {
             return true;
         }
 
-        // --- NUEVA NAVEGACIÓN A SUB-SUB-MENÚ ---
-        if (lower.includes('tipos de permisos legales')) {
-            await bot.navigateToMenu(context, conversationData, 'tiposPermisosLegales');
+        if (lower.includes('programas internos')) {
+            await bot.navigateToMenu(context, conversationData, 'programasInternos');
+            return true;
+        } else if (lower.includes('apoyo familiar')) {
+            await bot.navigateToMenu(context, conversationData, 'apoyoFamiliar');
             return true;
         }
-        // --- FIN NUEVA NAVEGACIÓN ---
 
-        const matchedOption = vacationOptions.find(opt => opt.toLowerCase() === lower);
+        const matchedOption = bienestarOptions.find(opt => opt.toLowerCase() === lower);
 
         if (matchedOption) {
             const response = content[lower];
@@ -58,4 +59,4 @@ class VacacionesMenu {
     }
 }
 
-module.exports = VacacionesMenu;
+module.exports = BienestarConciliacionMenu;

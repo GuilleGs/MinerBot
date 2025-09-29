@@ -1,22 +1,22 @@
-// dialogs/VacacionesMenu.js
+// dialogs/CulturaValoresMenu.js
 const { MessageFactory } = require('botbuilder');
 const content = require('./content');
 
-const vacationOptions = [
-    'Solicitar vacaciones',
-    'Consultar saldo de vacaciones',
-    'Procedimiento de licencia médica',
-    'Tipos de Permisos Legales 📝' // <-- NUEVA OPCIÓN QUE ES UN MENÚ
+const culturaOptions = [
+    'Código de ética y conducta',
+    'Valores corporativos y compromisos de diversidad',
+    'Canales de reporte confidencial',
+    'Procedimiento para Denuncias 🚨'
 ];
 
-class VacacionesMenu {
+class CulturaValoresMenu {
     constructor(bot) {
         this.bot = bot;
     }
 
     async show(context) {
         await context.sendActivity(
-            MessageFactory.suggestedActions(vacationOptions.concat(['Volver']), '📄 Vacaciones y Permisos')
+            MessageFactory.suggestedActions(culturaOptions.concat(['Volver']), '🚨 Cultura y Valores')
         );
     }
 
@@ -34,14 +34,12 @@ class VacacionesMenu {
             return true;
         }
 
-        // --- NUEVA NAVEGACIÓN A SUB-SUB-MENÚ ---
-        if (lower.includes('tipos de permisos legales')) {
-            await bot.navigateToMenu(context, conversationData, 'tiposPermisosLegales');
+        if (lower.includes('procedimiento para denuncias')) {
+            await bot.navigateToMenu(context, conversationData, 'procedimientoDenuncias');
             return true;
         }
-        // --- FIN NUEVA NAVEGACIÓN ---
 
-        const matchedOption = vacationOptions.find(opt => opt.toLowerCase() === lower);
+        const matchedOption = culturaOptions.find(opt => opt.toLowerCase() === lower);
 
         if (matchedOption) {
             const response = content[lower];
@@ -58,4 +56,4 @@ class VacacionesMenu {
     }
 }
 
-module.exports = VacacionesMenu;
+module.exports = CulturaValoresMenu;
