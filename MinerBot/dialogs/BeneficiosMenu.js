@@ -2,52 +2,67 @@
 const { MessageFactory } = require('botbuilder');
 const content = require('./content');
 
-const benefitsOptions = [
-    'Bonos de desempeño',
-    'Asignación de escolaridad',
-    'Aguinaldos y gratificaciones',
-    'Viáticos y reembolsos',
-    'Descuentos corporativos'
-];
-
 class BeneficiosMenu {
     constructor(bot) {
         this.bot = bot;
+        this.options = [ // Las opciones ahora son una propiedad de la instancia
+            'Bonos de desempeño',
+            'Asignación de escolaridad',
+            'Aguinaldos y gratificaciones',
+            'Viáticos y reembolsos',
+            'Descuentos corporativos'
+        ];
+        this.returnOption = 'Volver'; // Opción para volver
     }
 
     async show(context) {
-        await context.sendActivity(
-            MessageFactory.suggestedActions(benefitsOptions.concat(['Volver']), '💰 Beneficios Económicos')
-        );
+        let menuText = '💰 Beneficios Económicos:\n';
+        this.options.forEach((option, index) => {
+            menuText += `${index + 1}. ${option}\n`;
+        });
+        menuText += `${this.options.length + 1}. ${this.returnOption}\n`; // Añadir "Volver" al final
+        menuText += '\nPor favor, escribe el número o el nombre de la opción.';
+
+        await context.sendActivity(menuText);
     }
 
-    /**
-     * @param {TurnContext} context
-     * @param {string} text
-     * @param {object} conversationData - El objeto de estado de la conversación.
-     * @param {MinerBot} bot - La instancia del bot para acceder a sus métodos de navegación.
-     * @returns {boolean} True si la entrada fue manejada, false en caso contrario.
-     */
-    async handleInput(context, text, conversationData, bot) { // Se recibe 'bot' para goBack
+    async handleInput(context, text, conversationData, bot) {
         const lower = text.toLowerCase();
+        const number = parseInt(text.trim());
 
-        // --- INICIO DE CAMBIOS PARA EL COMPORTAMIENTO DE "VOLVER" ---
-        // Si el usuario está en un estado de display de información y escribe 'volver',
-        // simplemente mostramos las opciones del menú actual de nuevo.
-        if (conversationData.isInInfoDisplayState && lower.includes('volver')) {
-            conversationData.isInInfoDisplayState = false; // Resetea el flag
-            await this.show(context); // Vuelve a mostrar las opciones de BeneficiosMenu
-            return true;
-        }
-        // --- FIN DE CAMBIOS ---
-
-        if (lower.includes('volver')) {
-            await bot.goBack(context, conversationData); // Usa el método goBack del bot
+        // --- Manejo del estado de información y "Volver" ---
+        if (conversationData.isInInfoDisplayState && lower.includes(this.returnOption.toLowerCase())) {
+            conversationData.isInInfoDisplayState = false;
+            await this.show(context);
             return true;
         }
 
-        const matchedOption = benefitsOptions.find(opt => opt.toLowerCase() === lower);
+        // --- Manejo de entrada numérica ---
+        if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
+            const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
+            if (selectedOption.toLowerCase().includes(this.returnOption.toLowerCase())) {
+                await bot.goBack(context, conversationData);
+                return true;
+            }
+
+            // Opciones informativas
+            const response = content[selectedOption.toLowerCase()];
+            if (response) {
+                await context.sendActivity(response);
+                conversationData.isInInfoDisplayState = true;
+                return true;
+            }
+        }
+        // --- FIN Manejo de entrada numérica ---
+
+        // Lógica existente para manejar la entrada de texto (como fallback)
+        else if (lower.includes(this.returnOption.toLowerCase())) {
+            await bot.goBack(context, conversationData);
+            return true;
+        }
+
+        const matchedOption = this.options.find(opt => opt.toLowerCase() === lower);
         if (matchedOption) {
             const response = content[lower];
             if (response) {
@@ -55,11 +70,11 @@ class BeneficiosMenu {
             } else {
                 await context.sendActivity(`Has seleccionado: "${text}" (No hay información detallada aún).`);
             }
-            conversationData.isInInfoDisplayState = true; // <-- AÑADIDO: Establecer el flag
-            return true; // Se manejó una opción del menú
+            conversationData.isInInfoDisplayState = true;
+            return true;
         }
 
-        return false; // No se manejó ninguna opción del menú, dejar que MinerBot intente la KB
+        return false;
     }
 }
 

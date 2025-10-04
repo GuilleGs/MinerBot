@@ -2,34 +2,66 @@
 const { MessageFactory } = require('botbuilder');
 const content = require('./content');
 
-const bienestarOptions = [
-    'Programas de bienestar físico y psicológico',
-    'Iniciativas de conciliación vida-trabajo',
-    'Programas Internos 🏠',
-    'Apoyo Familiar 👨‍👩‍👧‍👦'
-];
-
 class BienestarConciliacionMenu {
     constructor(bot) {
         this.bot = bot;
+        this.options = [ // Las opciones ahora son una propiedad de la instancia
+            'Programas de bienestar físico y psicológico',
+            'Iniciativas de conciliación vida-trabajo',
+            'Programas Internos 🏠',
+            'Apoyo Familiar 👨‍👩‍👧‍👦'
+        ];
+        this.returnOption = 'Volver'; // Opción para volver
     }
 
     async show(context) {
-        await context.sendActivity(
-            MessageFactory.suggestedActions(bienestarOptions.concat(['Volver']), '🏠 Bienestar y Conciliación')
-        );
+        let menuText = '🏠 Bienestar y Conciliación:\n';
+        this.options.forEach((option, index) => {
+            menuText += `${index + 1}. ${option}\n`;
+        });
+        menuText += `${this.options.length + 1}. ${this.returnOption}\n`;
+        menuText += '\nPor favor, escribe el número o el nombre de la opción.';
+
+        await context.sendActivity(menuText);
     }
 
     async handleInput(context, text, conversationData, bot) {
         const lower = text.toLowerCase();
+        const number = parseInt(text.trim());
 
-        if (conversationData.isInInfoDisplayState && lower.includes('volver')) {
+        if (conversationData.isInInfoDisplayState && lower.includes(this.returnOption.toLowerCase())) {
             conversationData.isInInfoDisplayState = false;
             await this.show(context);
             return true;
         }
 
-        if (lower.includes('volver')) {
+        // --- Manejo de entrada numérica ---
+        if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
+            const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
+
+            if (selectedOption.toLowerCase().includes(this.returnOption.toLowerCase())) {
+                await bot.goBack(context, conversationData);
+                return true;
+            }
+
+            if (selectedOption.toLowerCase().includes('programas internos')) {
+                await bot.navigateToMenu(context, conversationData, 'programasInternos');
+                return true;
+            } else if (selectedOption.toLowerCase().includes('apoyo familiar')) {
+                await bot.navigateToMenu(context, conversationData, 'apoyoFamiliar');
+                return true;
+            }
+
+            const response = content[selectedOption.toLowerCase()];
+            if (response) {
+                await context.sendActivity(response);
+                conversationData.isInInfoDisplayState = true;
+                return true;
+            }
+        }
+        // --- FIN Manejo de entrada numérica ---
+
+        else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
         }
@@ -42,8 +74,7 @@ class BienestarConciliacionMenu {
             return true;
         }
 
-        const matchedOption = bienestarOptions.find(opt => opt.toLowerCase() === lower);
-
+        const matchedOption = this.options.find(opt => opt.toLowerCase() === lower);
         if (matchedOption) {
             const response = content[lower];
             if (response) {
@@ -59,4 +90,4 @@ class BienestarConciliacionMenu {
     }
 }
 
-module.exports = BienestarConciliacionMenu;
+module.exports = BienestarConciliacionMenu; 
