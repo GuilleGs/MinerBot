@@ -1,20 +1,22 @@
-// dialogs/submenus/ProcedimientoDenunciasMenu.js
+// src/dialogs/level1/CrecimientoDesarrolloMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('../content'); // Importante: ruta relativa
+const content = require('../data/content'); // --- CAMBIO AQUÍ: Ruta a content.js ---
 
-class ProcedimientoDenunciasMenu {
+class CrecimientoDesarrolloMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Denuncia por Acoso',
-            'Denuncia por Discriminación',
-            'Reporte de Conflicto de Interés'
+        this.options = [
+            'Cursos externos financiados por la empresa',
+            'Programa de trainees o becas de estudio',
+            'Evaluación de desempeño y retroalimentación',
+            'Planes de carrera y movilidad interna',
+            'Programas de Capacitación Interna 📚'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '🚨 Procedimiento para Denuncias:\n';
+        let menuText = '📚 Crecimiento y Desarrollo:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
@@ -34,12 +36,16 @@ class ProcedimientoDenunciasMenu {
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
             if (selectedOption.toLowerCase().includes(this.returnOption.toLowerCase())) {
                 await bot.goBack(context, conversationData);
+                return true;
+            }
+
+            if (selectedOption.toLowerCase().includes('programas de capacitación interna')) {
+                await bot.navigateToMenu(context, conversationData, 'programasCapacitacionInterna');
                 return true;
             }
 
@@ -50,10 +56,12 @@ class ProcedimientoDenunciasMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
+            return true;
+        }
+        else if (lower.includes('programas de capacitación interna')) {
+            await bot.navigateToMenu(context, conversationData, 'programasCapacitacionInterna');
             return true;
         }
 
@@ -73,4 +81,4 @@ class ProcedimientoDenunciasMenu {
     }
 }
 
-module.exports = ProcedimientoDenunciasMenu;
+module.exports = CrecimientoDesarrolloMenu;

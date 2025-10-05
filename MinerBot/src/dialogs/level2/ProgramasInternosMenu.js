@@ -1,21 +1,20 @@
-// dialogs/CulturaValoresMenu.js
+// src/dialogs/level2/ProgramasInternosMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('./content');
+const content = require('../data/content'); // --- CAMBIO AQUÍ: Ruta a content.js (sube dos niveles) ---
 
-class CulturaValoresMenu {
+class ProgramasInternosMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Código de ética y conducta',
-            'Valores corporativos y compromisos de diversidad',
-            'Canales de reporte confidencial',
-            'Procedimiento para Denuncias 🚨'
+        this.options = [
+            '“ViveTarapacá”',
+            'Voluntariado Corporativo',
+            'Club Deportivo'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '🚨 Cultura y Valores:\n';
+        let menuText = '🏠 Programas Internos:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
@@ -35,17 +34,11 @@ class CulturaValoresMenu {
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
             if (selectedOption.toLowerCase().includes(this.returnOption.toLowerCase())) {
                 await bot.goBack(context, conversationData);
-                return true;
-            }
-
-            if (selectedOption.toLowerCase().includes('procedimiento para denuncias')) {
-                await bot.navigateToMenu(context, conversationData, 'procedimientoDenuncias');
                 return true;
             }
 
@@ -56,15 +49,8 @@ class CulturaValoresMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
-            return true;
-        }
-
-        if (lower.includes('procedimiento para denuncias')) {
-            await bot.navigateToMenu(context, conversationData, 'procedimientoDenuncias');
             return true;
         }
 
@@ -84,4 +70,4 @@ class CulturaValoresMenu {
     }
 }
 
-module.exports = CulturaValoresMenu;
+module.exports = ProgramasInternosMenu;

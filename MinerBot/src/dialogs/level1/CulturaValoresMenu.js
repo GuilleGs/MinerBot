@@ -1,21 +1,21 @@
-// dialogs/SaludSegurosMenu.js
+// dialogs/level1/CulturaValoresMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('./content');
+const content = require('../data/content'); // --- RUTA DE CONTENT.JS ACTUALIZADA ---
 
-class SaludSegurosMenu {
+class CulturaValoresMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Procedimiento de reembolso médico/dental',
-            'Beneficios de salud mental',
-            'Seguro de vida y cobertura en accidentes laborales',
-            'Tipos de Seguros de Salud ⚕️'
+        this.options = [
+            'Código de ética y conducta',
+            'Valores corporativos y compromisos de diversidad',
+            'Canales de reporte confidencial',
+            'Procedimiento para Denuncias 🚨'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '💚 Salud y Seguros:\n';
+        let menuText = '🚨 Cultura y Valores:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
@@ -35,7 +35,7 @@ class SaludSegurosMenu {
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
+        // Manejo de entrada numérica
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
@@ -44,8 +44,8 @@ class SaludSegurosMenu {
                 return true;
             }
 
-            if (selectedOption.toLowerCase().includes('tipos de seguros de salud')) {
-                await bot.navigateToMenu(context, conversationData, 'tiposSegurosSalud');
+            if (selectedOption.toLowerCase().includes('procedimiento para denuncias')) {
+                await bot.navigateToMenu(context, conversationData, 'procedimientoDenuncias');
                 return true;
             }
 
@@ -56,15 +56,14 @@ class SaludSegurosMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
+        // Lógica existente para manejar la entrada de texto
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
         }
 
-        if (lower.includes('tipos de seguros de salud')) {
-            await bot.navigateToMenu(context, conversationData, 'tiposSegurosSalud');
+        if (lower.includes('procedimiento para denuncias')) {
+            await bot.navigateToMenu(context, conversationData, 'procedimientoDenuncias');
             return true;
         }
 
@@ -84,4 +83,4 @@ class SaludSegurosMenu {
     }
 }
 
-module.exports = SaludSegurosMenu;
+module.exports = CulturaValoresMenu;

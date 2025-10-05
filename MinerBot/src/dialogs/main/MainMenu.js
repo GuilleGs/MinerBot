@@ -1,6 +1,6 @@
-// dialogs/MainMenu.js
+// dialogs/main/MainMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('./content');
+const content = require('../data/content'); // --- RUTA DE CONTENT.JS ACTUALIZADA ---
 
 class MainMenu {
     constructor(bot) {

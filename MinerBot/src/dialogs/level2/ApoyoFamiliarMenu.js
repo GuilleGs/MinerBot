@@ -1,20 +1,20 @@
-// dialogs/submenus/TiposSegurosSaludMenu.js
+// src/dialogs/level2/ApoyoFamiliarMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('../content'); // Importante: ruta relativa
+const content = require('../data/content'); // --- CAMBIO AQUÍ: Ruta a content.js (sube dos niveles) ---
 
-class TiposSegurosSaludMenu {
+class ApoyoFamiliarMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Seguro Médico',
-            'Seguro Dental',
-            'Seguro Catastrófico'
+        this.options = [
+            'Apoyo de Guardería',
+            'Becas de Estudio para Hijos',
+            'Días Administrativos por Cuidado Familiar'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '⚕️ Tipos de Seguros de Salud:\n';
+        let menuText = '👨‍👩‍👧‍👦 Apoyo Familiar:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
@@ -34,7 +34,6 @@ class TiposSegurosSaludMenu {
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
@@ -50,8 +49,6 @@ class TiposSegurosSaludMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
@@ -73,4 +70,4 @@ class TiposSegurosSaludMenu {
     }
 }
 
-module.exports = TiposSegurosSaludMenu;
+module.exports = ApoyoFamiliarMenu;

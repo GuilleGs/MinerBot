@@ -1,21 +1,22 @@
-// dialogs/BienestarConciliacionMenu.js
+// dialogs/level1/BeneficiosMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('./content');
+const content = require('../data/content'); // --- RUTA DE CONTENT.JS ACTUALIZADA ---
 
-class BienestarConciliacionMenu {
+class BeneficiosMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Programas de bienestar físico y psicológico',
-            'Iniciativas de conciliación vida-trabajo',
-            'Programas Internos 🏠',
-            'Apoyo Familiar 👨‍👩‍👧‍👦'
+        this.options = [
+            'Bonos de desempeño',
+            'Asignación de escolaridad',
+            'Aguinaldos y gratificaciones',
+            'Viáticos y reembolsos',
+            'Descuentos corporativos'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '🏠 Bienestar y Conciliación:\n';
+        let menuText = '💰 Beneficios Económicos:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
@@ -35,20 +36,12 @@ class BienestarConciliacionMenu {
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
+        // Manejo de entrada numérica
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
             if (selectedOption.toLowerCase().includes(this.returnOption.toLowerCase())) {
                 await bot.goBack(context, conversationData);
-                return true;
-            }
-
-            if (selectedOption.toLowerCase().includes('programas internos')) {
-                await bot.navigateToMenu(context, conversationData, 'programasInternos');
-                return true;
-            } else if (selectedOption.toLowerCase().includes('apoyo familiar')) {
-                await bot.navigateToMenu(context, conversationData, 'apoyoFamiliar');
                 return true;
             }
 
@@ -59,18 +52,9 @@ class BienestarConciliacionMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
+        // Lógica existente para manejar la entrada de texto
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
-            return true;
-        }
-
-        if (lower.includes('programas internos')) {
-            await bot.navigateToMenu(context, conversationData, 'programasInternos');
-            return true;
-        } else if (lower.includes('apoyo familiar')) {
-            await bot.navigateToMenu(context, conversationData, 'apoyoFamiliar');
             return true;
         }
 
@@ -90,4 +74,4 @@ class BienestarConciliacionMenu {
     }
 }
 
-module.exports = BienestarConciliacionMenu; 
+module.exports = BeneficiosMenu;

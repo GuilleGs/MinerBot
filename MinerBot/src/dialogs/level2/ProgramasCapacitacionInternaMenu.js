@@ -1,26 +1,24 @@
-// dialogs/BeneficiosMenu.js
+// src/dialogs/level2/ProgramasCapacitacionInternaMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('./content');
+const content = require('../data/content'); // --- CAMBIO AQUÍ: Ruta a content.js (sube dos niveles) ---
 
-class BeneficiosMenu {
+class ProgramasCapacitacionInternaMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Bonos de desempeño',
-            'Asignación de escolaridad',
-            'Aguinaldos y gratificaciones',
-            'Viáticos y reembolsos',
-            'Descuentos corporativos'
+        this.options = [
+            'Capacitación DCL (Desarrollo de Competencias de Liderazgo)',
+            'Capacitación LEA (Ley de Etiquetado de Alimentos, ejemplo)',
+            'Cursos Técnicos Específicos'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '💰 Beneficios Económicos:\n';
+        let menuText = '📚 Programas de Capacitación Interna:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
-        menuText += `${this.options.length + 1}. ${this.returnOption}\n`; // Añadir "Volver" al final
+        menuText += `${this.options.length + 1}. ${this.returnOption}\n`;
         menuText += '\nPor favor, escribe el número o el nombre de la opción.';
 
         await context.sendActivity(menuText);
@@ -30,14 +28,12 @@ class BeneficiosMenu {
         const lower = text.toLowerCase();
         const number = parseInt(text.trim());
 
-        // --- Manejo del estado de información y "Volver" ---
         if (conversationData.isInInfoDisplayState && lower.includes(this.returnOption.toLowerCase())) {
             conversationData.isInInfoDisplayState = false;
             await this.show(context);
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
@@ -46,7 +42,6 @@ class BeneficiosMenu {
                 return true;
             }
 
-            // Opciones informativas
             const response = content[selectedOption.toLowerCase()];
             if (response) {
                 await context.sendActivity(response);
@@ -54,9 +49,6 @@ class BeneficiosMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
-        // Lógica existente para manejar la entrada de texto (como fallback)
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
@@ -78,4 +70,4 @@ class BeneficiosMenu {
     }
 }
 
-module.exports = BeneficiosMenu;
+module.exports = ProgramasCapacitacionInternaMenu;

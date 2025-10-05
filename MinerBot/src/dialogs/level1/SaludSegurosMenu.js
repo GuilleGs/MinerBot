@@ -1,22 +1,21 @@
-// dialogs/CrecimientoDesarrolloMenu.js
+// dialogs/level1/SaludSegurosMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('./content');
+const content = require('../data/content'); // --- RUTA DE CONTENT.JS ACTUALIZADA ---
 
-class CrecimientoDesarrolloMenu {
+class SaludSegurosMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Cursos externos financiados por la empresa',
-            'Programa de trainees o becas de estudio',
-            'Evaluación de desempeño y retroalimentación',
-            'Planes de carrera y movilidad interna',
-            'Programas de Capacitación Interna 📚'
+        this.options = [
+            'Procedimiento de reembolso médico/dental',
+            'Beneficios de salud mental',
+            'Seguro de vida y cobertura en accidentes laborales',
+            'Tipos de Seguros de Salud ⚕️'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '📚 Crecimiento y Desarrollo:\n';
+        let menuText = '💚 Salud y Seguros:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
@@ -36,7 +35,7 @@ class CrecimientoDesarrolloMenu {
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
+        // Manejo de entrada numérica
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
@@ -45,8 +44,8 @@ class CrecimientoDesarrolloMenu {
                 return true;
             }
 
-            if (selectedOption.toLowerCase().includes('programas de capacitación interna')) {
-                await bot.navigateToMenu(context, conversationData, 'programasCapacitacionInterna');
+            if (selectedOption.toLowerCase().includes('tipos de seguros de salud')) {
+                await bot.navigateToMenu(context, conversationData, 'tiposSegurosSalud');
                 return true;
             }
 
@@ -57,15 +56,14 @@ class CrecimientoDesarrolloMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
+        // Lógica existente para manejar la entrada de texto
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
         }
 
-        if (lower.includes('programas de capacitación interna')) {
-            await bot.navigateToMenu(context, conversationData, 'programasCapacitacionInterna');
+        if (lower.includes('tipos de seguros de salud')) {
+            await bot.navigateToMenu(context, conversationData, 'tiposSegurosSalud');
             return true;
         }
 
@@ -85,4 +83,4 @@ class CrecimientoDesarrolloMenu {
     }
 }
 
-module.exports = CrecimientoDesarrolloMenu;
+module.exports = SaludSegurosMenu;

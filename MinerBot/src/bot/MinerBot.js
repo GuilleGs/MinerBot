@@ -1,34 +1,34 @@
-// bot/MinerBot.js
+// src/bot/MinerBot.js
 const { ActivityHandler } = require('botbuilder');
 const dotenv = require('dotenv');
 dotenv.config();
 
 const KnowledgeService = require('./services/KnowledgeService');
 
-// Importa todos los menús, tanto los existentes como los nuevos de nivel superior
-const MainMenu = require('../dialogs/MainMenu');
-const VacacionesMenu = require('../dialogs/VacacionesMenu');
-const BeneficiosMenu = require('../dialogs/BeneficiosMenu');
-// --- NUEVOS MENUS DE NIVEL 1 ---
-const SaludSegurosMenu = require('../dialogs/SaludSegurosMenu');
-const BienestarConciliacionMenu = require('../dialogs/BienestarConciliacionMenu');
-const CulturaValoresMenu = require('../dialogs/CulturaValoresMenu');
-const CrecimientoDesarrolloMenu = require('../dialogs/CrecimientoDesarrolloMenu');
-const ConsultasGeneralesMenu = require('../dialogs/ConsultasGeneralesMenu');
+// --- CAMBIO AQUÍ: Nuevas rutas para los menús ---
+// Menú Principal
+const MainMenu = require('../dialogs/main/MainMenu');
 
-// --- NUEVOS SUB-MENUS (NIVEL 2 o 3) ---
-const TiposPermisosLegalesMenu = require('../dialogs/submenus/TiposPermisosLegalesMenu'); // Nuevo sub-menú de Vacaciones
-const TiposSegurosSaludMenu = require('../dialogs/submenus/TiposSegurosSaludMenu'); // Nuevo sub-menú de Salud y Seguros
-const ProgramasInternosMenu = require('../dialogs/submenus/ProgramasInternosMenu'); // Nuevo sub-menú de Bienestar y Conciliación
-const ApoyoFamiliarMenu = require('../dialogs/submenus/ApoyoFamiliarMenu'); // Nuevo sub-menú de Bienestar y Conciliación
-const ProcedimientoDenunciasMenu = require('../dialogs/submenus/ProcedimientoDenunciasMenu'); // Nuevo sub-menú de Cultura y Valores
-const ProgramasCapacitacionInternaMenu = require('../dialogs/submenus/ProgramasCapacitacionInternaMenu'); // Nuevo sub-menú de Crecimiento y Desarrollo
+// Menús de Nivel 1
+const VacacionesMenu = require('../dialogs/level1/VacacionesMenu');
+const BeneficiosMenu = require('../dialogs/level1/BeneficiosMenu');
+const SaludSegurosMenu = require('../dialogs/level1/SaludSegurosMenu');
+const BienestarConciliacionMenu = require('../dialogs/level1/BienestarConciliacionMenu');
+const CulturaValoresMenu = require('../dialogs/level1/CulturaValoresMenu');
+const CrecimientoDesarrolloMenu = require('../dialogs/level1/CrecimientoDesarrolloMenu');
+const ConsultasGeneralesMenu = require('../dialogs/level1/ConsultasGeneralesMenu');
+
+// Menús de Nivel 2
+const TiposPermisosLegalesMenu = require('../dialogs/level2/TiposPermisosLegalesMenu');
+const TiposSegurosSaludMenu = require('../dialogs/level2/TiposSegurosSaludMenu');
+const ProgramasInternosMenu = require('../dialogs/level2/ProgramasInternosMenu');
+const ApoyoFamiliarMenu = require('../dialogs/level2/ApoyoFamiliarMenu');
+const ProcedimientoDenunciasMenu = require('../dialogs/level2/ProcedimientoDenunciasMenu');
+const ProgramasCapacitacionInternaMenu = require('../dialogs/level2/ProgramasCapacitacionInternaMenu');
+// --- FIN CAMBIO ---
 
 
 class MinerBot extends ActivityHandler {
-    /**
-     * @param {ConversationState} conversationState - Se inyecta ConversationState en el constructor
-     */
     constructor(conversationState) {
         super();
         this.conversationState = conversationState;
@@ -39,14 +39,12 @@ class MinerBot extends ActivityHandler {
             main: new MainMenu(this),
             vacaciones: new VacacionesMenu(this),
             beneficios: new BeneficiosMenu(this),
-            // --- NUEVAS INSTANCIAS DE MENUS DE NIVEL 1 ---
             saludSeguros: new SaludSegurosMenu(this),
             bienestarConciliacion: new BienestarConciliacionMenu(this),
             culturaValores: new CulturaValoresMenu(this),
             crecimientoDesarrollo: new CrecimientoDesarrolloMenu(this),
             consultasGenerales: new ConsultasGeneralesMenu(this),
 
-            // --- NUEVAS INSTANCIAS DE SUB-MENUS ---
             tiposPermisosLegales: new TiposPermisosLegalesMenu(this),
             tiposSegurosSalud: new TiposSegurosSaludMenu(this),
             programasInternos: new ProgramasInternosMenu(this),

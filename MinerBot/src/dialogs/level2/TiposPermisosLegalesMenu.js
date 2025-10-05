@@ -1,25 +1,25 @@
-// dialogs/VacacionesMenu.js
+// src/dialogs/level2/TiposPermisosLegalesMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('./content');
+const content = require('../data/content'); // --- CAMBIO AQUÍ: Ruta a content.js (sube dos niveles) ---
 
-class VacacionesMenu {
+class TiposPermisosLegalesMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Solicitar vacaciones',
-            'Consultar saldo de vacaciones',
-            'Procedimiento de licencia médica',
-            'Tipos de Permisos Legales 📝'
+        this.options = [
+            'Permiso por Matrimonio',
+            'Permiso por Fallecimiento',
+            'Permiso por Estudios',
+            'Otros Permisos Legales'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '📄 Vacaciones y Permisos:\n';
+        let menuText = '📝 Tipos de Permisos Legales:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
-        menuText += `${this.options.length + 1}. ${this.returnOption}\n`; // Añadir "Volver" al final
+        menuText += `${this.options.length + 1}. ${this.returnOption}\n`;
         menuText += '\nPor favor, escribe el número o el nombre de la opción.';
 
         await context.sendActivity(menuText);
@@ -29,15 +29,13 @@ class VacacionesMenu {
         const lower = text.toLowerCase();
         const number = parseInt(text.trim());
 
-        // --- Manejo del estado de información y "Volver" ---
         if (conversationData.isInInfoDisplayState && lower.includes(this.returnOption.toLowerCase())) {
             conversationData.isInInfoDisplayState = false;
             await this.show(context);
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
-        if (!isNaN(number) && number > 0 && number <= this.options.length + 1) { // +1 para incluir la opción "Volver"
+        if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
             if (selectedOption.toLowerCase().includes(this.returnOption.toLowerCase())) {
@@ -45,12 +43,6 @@ class VacacionesMenu {
                 return true;
             }
 
-            if (selectedOption.toLowerCase().includes('tipos de permisos legales')) {
-                await bot.navigateToMenu(context, conversationData, 'tiposPermisosLegales');
-                return true;
-            }
-
-            // Opciones informativas
             const response = content[selectedOption.toLowerCase()];
             if (response) {
                 await context.sendActivity(response);
@@ -58,15 +50,8 @@ class VacacionesMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
-        // Lógica existente para manejar la entrada de texto (como fallback)
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
-            return true;
-        }
-        else if (lower.includes('tipos de permisos legales')) {
-            await bot.navigateToMenu(context, conversationData, 'tiposPermisosLegales');
             return true;
         }
 
@@ -86,4 +71,4 @@ class VacacionesMenu {
     }
 }
 
-module.exports = VacacionesMenu;
+module.exports = TiposPermisosLegalesMenu;

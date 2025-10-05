@@ -1,20 +1,19 @@
-// dialogs/submenus/ProgramasCapacitacionInternaMenu.js
+// src/dialogs/level1/ConsultasGeneralesMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('../content'); // Importante: ruta relativa
+const content = require('../data/content'); // --- CAMBIO AQUÍ: Ruta a content.js ---
 
-class ProgramasCapacitacionInternaMenu {
+class ConsultasGeneralesMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Capacitación DCL (Desarrollo de Competencias de Liderazgo)',
-            'Capacitación LEA (Ley de Etiquetado de Alimentos, ejemplo)',
-            'Cursos Técnicos Específicos'
+        this.options = [
+            'Información general de la empresa',
+            'No encontré lo que buscaba 🆘'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '📚 Programas de Capacitación Interna:\n';
+        let menuText = '🆘 Consultas Generales y Otros:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
@@ -34,7 +33,6 @@ class ProgramasCapacitacionInternaMenu {
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
@@ -50,8 +48,6 @@ class ProgramasCapacitacionInternaMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
@@ -73,4 +69,4 @@ class ProgramasCapacitacionInternaMenu {
     }
 }
 
-module.exports = ProgramasCapacitacionInternaMenu;
+module.exports = ConsultasGeneralesMenu;

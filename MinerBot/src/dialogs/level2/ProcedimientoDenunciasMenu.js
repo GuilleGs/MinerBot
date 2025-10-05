@@ -1,19 +1,20 @@
-// dialogs/ConsultasGeneralesMenu.js
+// src/dialogs/level2/ProcedimientoDenunciasMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('./content');
+const content = require('../data/content'); // --- CAMBIO AQUÍ: Ruta a content.js (sube dos niveles) ---
 
-class ConsultasGeneralesMenu {
+class ProcedimientoDenunciasMenu {
     constructor(bot) {
         this.bot = bot;
-        this.options = [ // Las opciones ahora son una propiedad de la instancia
-            'Información general de la empresa',
-            'No encontré lo que buscaba 🆘'
+        this.options = [
+            'Denuncia por Acoso',
+            'Denuncia por Discriminación',
+            'Reporte de Conflicto de Interés'
         ];
-        this.returnOption = 'Volver'; // Opción para volver
+        this.returnOption = 'Volver';
     }
 
     async show(context) {
-        let menuText = '🆘 Consultas Generales y Otros:\n';
+        let menuText = '🚨 Procedimiento para Denuncias:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
@@ -33,7 +34,6 @@ class ConsultasGeneralesMenu {
             return true;
         }
 
-        // --- Manejo de entrada numérica ---
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
@@ -49,8 +49,6 @@ class ConsultasGeneralesMenu {
                 return true;
             }
         }
-        // --- FIN Manejo de entrada numérica ---
-
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
@@ -72,4 +70,4 @@ class ConsultasGeneralesMenu {
     }
 }
 
-module.exports = ConsultasGeneralesMenu;
+module.exports = ProcedimientoDenunciasMenu;
