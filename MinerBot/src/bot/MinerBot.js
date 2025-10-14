@@ -4,10 +4,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const KnowledgeService = require('./services/KnowledgeService');
+const EmployeeService = require('./services/EmployeeService');
 
-// --- CAMBIO AQUÍ: Nuevas rutas para los menús ---
 // Menú Principal
 const MainMenu = require('../dialogs/main/MainMenu');
+const AuthMenu = require('../dialogs/main/AuthMenu');
 
 // Menús de Nivel 1
 const VacacionesMenu = require('../dialogs/level1/VacacionesMenu');
@@ -25,7 +26,6 @@ const ProgramasInternosMenu = require('../dialogs/level2/ProgramasInternosMenu')
 const ApoyoFamiliarMenu = require('../dialogs/level2/ApoyoFamiliarMenu');
 const ProcedimientoDenunciasMenu = require('../dialogs/level2/ProcedimientoDenunciasMenu');
 const ProgramasCapacitacionInternaMenu = require('../dialogs/level2/ProgramasCapacitacionInternaMenu');
-// --- FIN CAMBIO ---
 
 
 class MinerBot extends ActivityHandler {
@@ -34,9 +34,12 @@ class MinerBot extends ActivityHandler {
         this.conversationState = conversationState;
         this.conversationStateAccessor = this.conversationState.createProperty('MinerBotConversationState');
 
+        this.employeeService = new EmployeeService();
+
         // Instancias de los menús
         this.menuInstances = {
             main: new MainMenu(this),
+            auth: new AuthMenu(this),
             vacaciones: new VacacionesMenu(this),
             beneficios: new BeneficiosMenu(this),
             saludSeguros: new SaludSegurosMenu(this),
@@ -61,12 +64,20 @@ class MinerBot extends ActivityHandler {
                 if (member.id !== context.activity.recipient.id) {
                     const conversationData = await this.conversationStateAccessor.get(context, {
                         menuStack: [],
-                        currentMenuId: 'main',
-                        isInInfoDisplayState: false
+                        currentMenuId: 'auth',
+                        isAuthenticated: false,
+                        employeeId: null,
+                        employeeName: null,
+                        employeeEmail: null,
+                        employeeSede: null,
+                        employeeArea: null,
+                        employeeCargo: null,
+                        isInInfoDisplayState: false,
+                        // --- INICIO CAMBIOS: NUEVAS PROPIEDADES PARA EL BLOQUEO DE LOGIN ---
+                        failedLoginAttempts: 0,
+                        lastFailedAttemptTime: 0
+                        // --- FIN CAMBIOS ---
                     });
-                    const currentMenuInstance = this.menuInstances[conversationData.currentMenuId];
-                    await context.sendActivity('👋 Bienvenido, escribe "menu" para ver las opciones.');
-                    await currentMenuInstance.show(context);
                 }
             }
             await next();
@@ -77,18 +88,43 @@ class MinerBot extends ActivityHandler {
 
             const conversationData = await this.conversationStateAccessor.get(context, {
                 menuStack: [],
-                currentMenuId: 'main',
-                isInInfoDisplayState: false
+                currentMenuId: 'auth',
+                isAuthenticated: false,
+                employeeId: null,
+                employeeName: null,
+                employeeEmail: null,
+                employeeSede: null,
+                employeeArea: null,
+                employeeCargo: null,
+                isInInfoDisplayState: false,
+                // --- INICIO CAMBIOS: NUEVAS PROPIEDADES PARA EL BLOQUEO DE LOGIN ---
+                failedLoginAttempts: 0,
+                lastFailedAttemptTime: 0
+                // --- FIN CAMBIOS ---
             });
 
             let currentMenuInstance = this.menuInstances[conversationData.currentMenuId];
 
-            if (text.toLowerCase() === 'menu') {
+            if (!conversationData.isAuthenticated && conversationData.currentMenuId !== 'auth') {
                 conversationData.menuStack = [];
-                conversationData.currentMenuId = 'main';
-                conversationData.isInInfoDisplayState = false;
-                currentMenuInstance = this.menuInstances[conversationData.currentMenuId];
+                conversationData.currentMenuId = 'auth';
+                currentMenuInstance = this.menuInstances.auth;
                 await currentMenuInstance.show(context);
+                await next();
+                return;
+            }
+
+            if (text.toLowerCase() === 'menu') {
+                if (conversationData.isAuthenticated) {
+                    conversationData.menuStack = [];
+                    conversationData.currentMenuId = 'main';
+                    conversationData.isInInfoDisplayState = false;
+                    currentMenuInstance = this.menuInstances[conversationData.currentMenuId];
+                    await currentMenuInstance.show(context);
+                } else {
+                    await context.sendActivity('Por favor, inicia sesión para acceder al menú principal.');
+                    await this.menuInstances.auth.show(context);
+                }
                 await next();
                 return;
             }
@@ -108,7 +144,47 @@ class MinerBot extends ActivityHandler {
         });
     }
 
+    async run(context) {
+        const conversationData = await this.conversationStateAccessor.get(context, {
+            menuStack: [],
+            currentMenuId: 'auth',
+            isAuthenticated: false,
+            employeeId: null,
+            employeeName: null,
+            employeeEmail: null,
+            employeeSede: null,
+            employeeArea: null,
+            employeeCargo: null,
+            isInInfoDisplayState: false,
+            // --- INICIO CAMBIOS: NUEVAS PROPIEDADES PARA EL BLOQUEO DE LOGIN (También en run para inicialización temprana) ---
+            failedLoginAttempts: 0,
+            lastFailedAttemptTime: 0
+            // --- FIN CAMBIOS ---
+        });
+
+        if (context.activity.type === 'conversationUpdate' && context.activity.membersAdded && context.activity.membersAdded.length > 0) {
+            for (let member of context.activity.membersAdded) {
+                if (member.id !== context.activity.recipient.id) {
+                    if (!conversationData.isAuthenticated) {
+                        await context.sendActivity('👋 Bienvenido a MinerBot Global Asistente.');
+                        await this.menuInstances.auth.show(context);
+                    } else {
+                        await context.sendActivity(`¡Bienvenido de nuevo, ${conversationData.employeeName}! ¿En qué le puedo asistir?`);
+                        await this.menuInstances.main.show(context);
+                    }
+                }
+            }
+        }
+        await super.run(context);
+    }
+
     async navigateToMenu(context, conversationData, newMenuId) {
+        if (!conversationData.isAuthenticated && newMenuId !== 'auth') {
+            await context.sendActivity('Por favor, inicia sesión para acceder a esta funcionalidad.');
+            await this.menuInstances.auth.show(context);
+            return;
+        }
+
         if (conversationData.currentMenuId && conversationData.currentMenuId !== newMenuId) {
              conversationData.menuStack.push(conversationData.currentMenuId);
         }
@@ -119,14 +195,24 @@ class MinerBot extends ActivityHandler {
     }
 
     async goBack(context, conversationData) {
+        if (!conversationData.isAuthenticated && conversationData.menuStack.length === 0) {
+            await context.sendActivity('Por favor, inicia sesión para continuar.');
+            await this.menuInstances.auth.show(context);
+            return;
+        }
+
         const previousMenuId = conversationData.menuStack.pop();
         if (previousMenuId) {
             conversationData.currentMenuId = previousMenuId;
             const previousMenuInstance = this.menuInstances[previousMenuId];
             await previousMenuInstance.show(context);
         } else {
-            conversationData.currentMenuId = 'main';
-            await this.menuInstances.main.show(context);
+            if (conversationData.isAuthenticated) {
+                conversationData.currentMenuId = 'main';
+                await this.menuInstances.main.show(context);
+            } else {
+                await this.menuInstances.auth.show(context);
+            }
         }
         conversationData.isInInfoDisplayState = false;
     }

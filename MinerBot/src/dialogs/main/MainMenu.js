@@ -1,6 +1,6 @@
-// dialogs/main/MainMenu.js
+// src/dialogs/main/MainMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('../data/content'); // --- RUTA DE CONTENT.JS ACTUALIZADA ---
+const content = require('../data/content');
 
 class MainMenu {
     constructor(bot) {
@@ -17,6 +17,16 @@ class MainMenu {
     }
 
     async show(context) {
+        // --- CAMBIO AQUÍ: Solo mostrar si está autenticado ---
+        const conversationData = await this.bot.conversationStateAccessor.get(context);
+        if (!conversationData || !conversationData.isAuthenticated) {
+            // Esto no debería suceder si la lógica de MinerBot.js funciona, pero es una salvaguarda.
+            await context.sendActivity('Por favor, inicia sesión para ver el menú principal.');
+            await this.bot.menuInstances.auth.show(context);
+            return;
+        }
+        // --- FIN CAMBIO ---
+
         let menuText = 'Menú principal:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
@@ -27,10 +37,17 @@ class MainMenu {
     }
 
     async handleInput(context, text, conversationData) {
+        // --- CAMBIO AQUÍ: Solo procesar entrada si está autenticado ---
+        if (!conversationData.isAuthenticated) {
+            await context.sendActivity('Por favor, inicia sesión para interactuar con el menú.');
+            await this.bot.menuInstances.auth.show(context);
+            return true;
+        }
+        // --- FIN CAMBIO ---
+
         const lower = text.toLowerCase();
         const number = parseInt(text.trim());
 
-        // Manejo de entrada numérica
         if (!isNaN(number) && number > 0 && number <= this.options.length) {
             const selectedOption = this.options[number - 1].toLowerCase();
 
@@ -62,7 +79,6 @@ class MainMenu {
                 return true;
             }
         }
-        // Lógica existente para manejar la entrada de texto (como fallback)
         else if (lower.includes('vacaciones')) {
             await this.bot.navigateToMenu(context, conversationData, 'vacaciones');
             return true;
