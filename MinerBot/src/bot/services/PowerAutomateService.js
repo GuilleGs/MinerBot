@@ -6,14 +6,14 @@ dotenv.config();
 class PowerAutomateService {
     constructor() {
         this.queryFlowUrl = process.env.POWER_AUTOMATE_QUERY_FLOW_URL;
-        this.courseFlowUrl = process.env.POWER_AUTOMATE_COURSE_FLOW_URL; // Para futuras integraciones
+        this.courseFlowUrl = process.env.POWER_AUTOMATE_COURSE_FLOW_URL; // Para la solicitud de cursos
         this.complaintFlowUrl = process.env.POWER_AUTOMATE_COMPLAINT_FLOW_URL; // Para futuras integraciones
     }
 
     /**
      * Envía una consulta no resuelta a un flujo de Power Automate.
      * Incluye datos del empleado (si existen) y la consulta.
-     * @param {object} data - Objeto con los datos a enviar. Puede incluir nombreEmpleado, rutEmpleado, employeeArea, employeeCargo, consultaTexto.
+     * @param {object} data - Objeto con los datos a enviar.
      * @returns {Promise<boolean>} True si el envío fue exitoso, false en caso contrario.
      */
     async sendUnresolvedQuery(data) {
@@ -23,17 +23,15 @@ class PowerAutomateService {
         }
 
         const now = new Date();
-        const payload = {};
-
-        // Recolectar datos y añadirlos al payload si existen
-        if (data.nombreEmpleado) payload.nombreEmpleado = data.nombreEmpleado;
-        if (data.rutEmpleado) payload.rutEmpleado = data.rutEmpleado;
-        if (data.employeeArea) payload.employeeArea = data.employeeArea; // AÑADIDO
-        if (data.employeeCargo) payload.employeeCargo = data.employeeCargo; // AÑADIDO
-        if (data.consultaTexto) payload.consultaTexto = data.consultaTexto;
-
-        payload.fecha = now.toLocaleDateString('es-CL', { timeZone: 'America/Santiago' });
-        payload.hora = now.toLocaleTimeString('es-CL', { hourCycle: 'h23', timeZone: 'America/Santiago' });
+        const payload = {
+            nombreEmpleado: data.nombreEmpleado || '',
+            rutEmpleado: data.rutEmpleado || '',
+            employeeArea: data.employeeArea || '',
+            employeeCargo: data.employeeCargo || '',
+            consultaTexto: data.consultaTexto || '',
+            fecha: now.toLocaleDateString('es-CL', { timeZone: 'America/Santiago' }),
+            hora: now.toLocaleTimeString('es-CL', { hourCycle: 'h23', timeZone: 'America/Santiago' })
+        };
 
         try {
             await axios.post(this.queryFlowUrl, payload);
@@ -44,9 +42,38 @@ class PowerAutomateService {
         }
     }
 
-    // --- Futuras funciones para otros flujos de Power Automate ---
-    // async sendCourseRequest(data) { ... }
+    /**
+     * Envía una solicitud de curso a un flujo de Power Automate.
+     * @param {object} data - Objeto con los datos a enviar (nombreEmpleado, rutEmpleado, employeeArea, employeeCargo, cursoSolicitado).
+     * @returns {Promise<boolean>} True si el envío fue exitoso, false en caso contrario.
+     */
+    async sendCourseRequest(data) { // ¡NUEVO MÉTODO!
+        if (!this.courseFlowUrl) {
+            console.error('❌ POWER_AUTOMATE_COURSE_FLOW_URL no está configurada.');
+            return false;
+        }
+
+        const now = new Date();
+        const payload = {
+            nombreEmpleado: data.nombreEmpleado || '',
+            rutEmpleado: data.rutEmpleado || '',
+            employeeArea: data.employeeArea || '',
+            employeeCargo: data.employeeCargo || '',
+            cursoSolicitado: data.cursoSolicitado || '',
+            fechaSolicitud: now.toLocaleDateString('es-CL', { timeZone: 'America/Santiago' }),
+            horaSolicitud: now.toLocaleTimeString('es-CL', { hourCycle: 'h23', timeZone: 'America/Santiago' })
+        };
+
+        try {
+            await axios.post(this.courseFlowUrl, payload);
+            return true;
+        } catch (error) {
+            console.error('❌ Error al enviar la solicitud de curso a Power Automate:', error.response?.data || error.message);
+            return false;
+        }
+    }
+
     // async sendAnonymousComplaint(data) { ... }
 }
 
-module.exports = PowerAutomateService; 
+module.exports = PowerAutomateService;
