@@ -49,4 +49,4 @@ class PowerAutomateService {
     // async sendAnonymousComplaint(data) { ... }
 }
 
-module.exports = PowerAutomateService;
+module.exports = PowerAutomateService; 

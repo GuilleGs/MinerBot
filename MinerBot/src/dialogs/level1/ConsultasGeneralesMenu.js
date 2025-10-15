@@ -1,13 +1,9 @@
 // src/dialogs/level1/ConsultasGeneralesMenu.js
 const { MessageFactory } = require('botbuilder');
-<<<<<<< HEAD
 const content = require('../data/content');
 // const axios = require('axios'); // ¡ELIMINADO!
 // const dotenv = require('dotenv'); // ¡ELIMINADO!
 // dotenv.config(); // ¡ELIMINADO!
-=======
-const content = require('../data/content'); // --- CAMBIO AQUÍ: Ruta a content.js ---
->>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
 
 class ConsultasGeneralesMenu {
     constructor(bot) {
@@ -17,7 +13,6 @@ class ConsultasGeneralesMenu {
             'No encontré lo que buscaba 🆘'
         ];
         this.returnOption = 'Volver';
-<<<<<<< HEAD
         // this.powerAutomateQueryFlowUrl = process.env.POWER_AUTOMATE_QUERY_FLOW_URL; // ¡ELIMINADO! Ahora se usa el servicio
     }
 
@@ -30,11 +25,6 @@ class ConsultasGeneralesMenu {
             return;
         }
 
-=======
-    }
-
-    async show(context) {
->>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
         let menuText = '🆘 Consultas Generales y Otros:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
@@ -49,7 +39,6 @@ class ConsultasGeneralesMenu {
         const lower = text.toLowerCase();
         const number = parseInt(text.trim());
 
-<<<<<<< HEAD
         if (conversationData.awaitingUserQuery) {
             const userQuery = text.trim();
             if (!userQuery) {
@@ -87,8 +76,6 @@ class ConsultasGeneralesMenu {
             return true;
         }
 
-=======
->>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
         if (conversationData.isInInfoDisplayState && lower.includes(this.returnOption.toLowerCase())) {
             conversationData.isInInfoDisplayState = false;
             await this.show(context);
@@ -103,15 +90,12 @@ class ConsultasGeneralesMenu {
                 return true;
             }
 
-<<<<<<< HEAD
             if (selectedOption.toLowerCase().includes('no encontré lo que buscaba')) {
                 conversationData.awaitingUserQuery = true;
                 await this.show(context); // Mostrará el mensaje directo y esperará la consulta
                 return true;
             }
 
-=======
->>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
             const response = content[selectedOption.toLowerCase()];
             if (response) {
                 await context.sendActivity(response);
@@ -123,14 +107,11 @@ class ConsultasGeneralesMenu {
             await bot.goBack(context, conversationData);
             return true;
         }
-<<<<<<< HEAD
         else if (lower.includes('no encontré lo que buscaba')) {
             conversationData.awaitingUserQuery = true;
             await this.show(context); // Mostrará el mensaje directo y esperará la consulta
             return true;
         }
-=======
->>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
 
         const matchedOption = this.options.find(opt => opt.toLowerCase() === lower);
         if (matchedOption) {
