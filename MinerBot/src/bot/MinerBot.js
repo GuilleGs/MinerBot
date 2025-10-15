@@ -5,7 +5,10 @@ dotenv.config();
 
 const KnowledgeService = require('./services/KnowledgeService');
 const EmployeeService = require('./services/EmployeeService');
+<<<<<<< HEAD
 const PowerAutomateService = require('./services/PowerAutomateService'); // ¡AÑADIDO!
+=======
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
 
 // Menú Principal
 const MainMenu = require('../dialogs/main/MainMenu');
@@ -36,7 +39,10 @@ class MinerBot extends ActivityHandler {
         this.conversationStateAccessor = this.conversationState.createProperty('MinerBotConversationState');
 
         this.employeeService = new EmployeeService();
+<<<<<<< HEAD
         this.powerAutomateService = new PowerAutomateService(); // ¡INSTANCIA AÑADIDA!
+=======
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
 
         // Instancias de los menús
         this.menuInstances = {
@@ -64,13 +70,18 @@ class MinerBot extends ActivityHandler {
             const membersAdded = context.activity.membersAdded;
             for (let member of membersAdded) {
                 if (member.id !== context.activity.recipient.id) {
+<<<<<<< HEAD
                     await this.conversationStateAccessor.get(context, {
+=======
+                    const conversationData = await this.conversationStateAccessor.get(context, {
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
                         menuStack: [],
                         currentMenuId: 'auth',
                         isAuthenticated: false,
                         employeeId: null,
                         employeeName: null,
                         employeeEmail: null,
+<<<<<<< HEAD
                         // --- INICIO CAMBIOS: Asegurar que estos se inicialicen ---
                         employeeRut: null, // ¡AÑADIDO!
                         employeeSede: null,
@@ -81,6 +92,16 @@ class MinerBot extends ActivityHandler {
                         failedLoginAttempts: 0,
                         lastFailedAttemptTime: 0,
                         awaitingUserQuery: false
+=======
+                        employeeSede: null,
+                        employeeArea: null,
+                        employeeCargo: null,
+                        isInInfoDisplayState: false,
+                        // --- INICIO CAMBIOS: NUEVAS PROPIEDADES PARA EL BLOQUEO DE LOGIN ---
+                        failedLoginAttempts: 0,
+                        lastFailedAttemptTime: 0
+                        // --- FIN CAMBIOS ---
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
                     });
                 }
             }
@@ -97,6 +118,7 @@ class MinerBot extends ActivityHandler {
                 employeeId: null,
                 employeeName: null,
                 employeeEmail: null,
+<<<<<<< HEAD
                 // --- INICIO CAMBIOS: Asegurar que estos se inicialicen ---
                 employeeRut: null, // ¡AÑADIDO!
                 employeeSede: null,
@@ -117,6 +139,18 @@ class MinerBot extends ActivityHandler {
                 }
             }
 
+=======
+                employeeSede: null,
+                employeeArea: null,
+                employeeCargo: null,
+                isInInfoDisplayState: false,
+                // --- INICIO CAMBIOS: NUEVAS PROPIEDADES PARA EL BLOQUEO DE LOGIN ---
+                failedLoginAttempts: 0,
+                lastFailedAttemptTime: 0
+                // --- FIN CAMBIOS ---
+            });
+
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
             let currentMenuInstance = this.menuInstances[conversationData.currentMenuId];
 
             if (!conversationData.isAuthenticated && conversationData.currentMenuId !== 'auth') {
@@ -129,7 +163,10 @@ class MinerBot extends ActivityHandler {
             }
 
             if (text.toLowerCase() === 'menu') {
+<<<<<<< HEAD
                 conversationData.awaitingUserQuery = false;
+=======
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
                 if (conversationData.isAuthenticated) {
                     conversationData.menuStack = [];
                     conversationData.currentMenuId = 'main';
@@ -147,12 +184,15 @@ class MinerBot extends ActivityHandler {
             let handled = await currentMenuInstance.handleInput(context, text, conversationData, this);
 
             if (!handled) {
+<<<<<<< HEAD
                 if (conversationData.awaitingUserQuery) {
                     await context.sendActivity('Por favor, ingresa el texto de tu consulta o escribe "volver" para cancelar.');
                     await next();
                     return;
                 }
 
+=======
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
                 const answer = await this.knowledgeService.ask(text);
                 if (answer && answer !== 'No encontré una respuesta en la KB.') {
                     await context.sendActivity(answer);
@@ -173,6 +213,7 @@ class MinerBot extends ActivityHandler {
             employeeId: null,
             employeeName: null,
             employeeEmail: null,
+<<<<<<< HEAD
             // --- INICIO CAMBIOS: Asegurar que estos se inicialicen ---
             employeeRut: null, // ¡AÑADIDO!
             employeeSede: null,
@@ -183,12 +224,25 @@ class MinerBot extends ActivityHandler {
             failedLoginAttempts: 0,
             lastFailedAttemptTime: 0,
             awaitingUserQuery: false
+=======
+            employeeSede: null,
+            employeeArea: null,
+            employeeCargo: null,
+            isInInfoDisplayState: false,
+            // --- INICIO CAMBIOS: NUEVAS PROPIEDADES PARA EL BLOQUEO DE LOGIN (También en run para inicialización temprana) ---
+            failedLoginAttempts: 0,
+            lastFailedAttemptTime: 0
+            // --- FIN CAMBIOS ---
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
         });
 
         if (context.activity.type === 'conversationUpdate' && context.activity.membersAdded && context.activity.membersAdded.length > 0) {
             for (let member of context.activity.membersAdded) {
                 if (member.id !== context.activity.recipient.id) {
+<<<<<<< HEAD
                     conversationData.awaitingUserQuery = false;
+=======
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
                     if (!conversationData.isAuthenticated) {
                         await context.sendActivity('👋 Bienvenido a MinerBot Global Asistente.');
                         await this.menuInstances.auth.show(context);
@@ -209,8 +263,11 @@ class MinerBot extends ActivityHandler {
             return;
         }
 
+<<<<<<< HEAD
         conversationData.awaitingUserQuery = false;
 
+=======
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
         if (conversationData.currentMenuId && conversationData.currentMenuId !== newMenuId) {
              conversationData.menuStack.push(conversationData.currentMenuId);
         }
@@ -227,8 +284,11 @@ class MinerBot extends ActivityHandler {
             return;
         }
 
+<<<<<<< HEAD
         conversationData.awaitingUserQuery = false;
 
+=======
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
         const previousMenuId = conversationData.menuStack.pop();
         if (previousMenuId) {
             conversationData.currentMenuId = previousMenuId;

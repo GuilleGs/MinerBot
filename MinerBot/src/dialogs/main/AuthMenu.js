@@ -52,7 +52,10 @@ class AuthMenu {
                 conversationData.employeeId = employee.ID_Empleado;
                 conversationData.employeeName = `${employee.Nombre} ${employee.ApellidoPaterno}`;
                 conversationData.employeeEmail = employee.EmailCorporativo;
+<<<<<<< HEAD
                 conversationData.employeeRut = employee.Rut;
+=======
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
                 conversationData.employeeSede = employee.Sede;
                 conversationData.employeeArea = employee.Area;
                 conversationData.employeeCargo = employee.Cargo;

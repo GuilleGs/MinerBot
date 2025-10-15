@@ -109,6 +109,10 @@ module.exports = {
     // ======================================================================================
     'consultas generales y otros': 'En esta sección encontrará información de interés general sobre MinerBot Global y opciones para consultas no resueltas.',
     'información general de la empresa': 'MinerBot Global se fundó en 1985 en Canadá, expandiendo sus operaciones a Chile en 1998 con la faena "Cerro Brillante" en Iquique. Nuestra misión es [Misión Breve de la empresa minera]. Puede encontrar más detalles sobre nuestra historia, valores, presencia global y estructura organizacional en el sitio web corporativo: [Sitio Web MinerBot Global](http://www.minerbotglobal.com)',
+<<<<<<< HEAD
     // --- INICIO CAMBIOS: NUEVO MENSAJE para 'no encontré lo que buscaba 🆘' ---
     'no encontré lo que buscaba 🆘': 'Lamentamos no haber podido encontrar una solución inmediata. Por favor, escribe tu consulta a continuación y la enviaremos para ser revisada por el equipo correspondiente. Puedes escribir "volver" para cancelar.',
+=======
+    'no encontré lo que buscaba 🆘': 'Lamento no haber podido asistirle con una respuesta directa. Para consultas no resueltas o situaciones específicas que requieran intervención humana, por favor, escriba su pregunta aquí y la enviaremos como solicitud al departamento de Recursos Humanos o al área correspondiente para su pronta atención. Alternativamente, puede contactar a RRHH directamente en rrhh.chile@minerbot.com o al anexo 2500 (Santiago) / 3800 (Iquique).'
+>>>>>>> 281abc1a7a45e54b171fac0472dd40fd30b1e110
 };
