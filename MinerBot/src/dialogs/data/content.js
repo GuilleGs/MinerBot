@@ -88,6 +88,9 @@ module.exports = {
     'denuncia por acoso': 'El procedimiento para denuncias de acoso (laboral o sexual) en MinerBot Global garantiza la confidencialidad, la protección del denunciante y una investigación imparcial. Puede iniciar una denuncia a través de IntegrityLine (línea externa) o contactando a su Gestor de RRHH o al área de Compliance. La política de acoso cero está en SharePoint.',
     'denuncia por discriminación': 'Si ha sido víctima o testigo de un acto de discriminación, el procedimiento de denuncia asegura un proceso justo y sin represalias. Nuestra política de no discriminación se aplica estrictamente. Presente su denuncia a través de los canales de IntegrityLine o directamente en RRHH.',
     'reporte de conflicto de interés': 'Para mantener la transparencia y la integridad operativa de MinerBot Global, cualquier situación que pudiera implicar un conflicto de interés debe ser reportada inmediatamente a su jefatura, al área de Compliance o a través de IntegrityLine. La política de Conflictos de Interés está disponible en SharePoint de Compliance.',
+    // --- INICIO CAMBIOS: Nuevo mensaje para Denuncia Anónima ---
+    'realizar denuncia anónima 🤫': 'Por favor, escribe el texto de tu denuncia a continuación. Recuerda que esta denuncia es anónima y no se registrarán tus datos personales. Escribe "volver" para cancelar.', // ¡AÑADIDO!
+    // --- FIN CAMBIOS ---
 
     // ======================================================================================
     // 6. Crecimiento y Desarrollo (ID: 'crecimientoDesarrollo')
@@ -98,7 +101,7 @@ module.exports = {
     'evaluación de desempeño y retroalimentación': 'Realizamos evaluaciones de desempeño anuales a través de la plataforma "PerformUp" para identificar fortalezas, áreas de mejora y establecer planes de desarrollo individuales. La retroalimentación continua es clave para su crecimiento profesional. [Acceso PerformUp](https://intranet.minerbot.com/performup)',
     'planes de carrera y movilidad interna': 'Ofrecemos robustas oportunidades de crecimiento a través de planes de carrera definidos y un programa de movilidad interna entre nuestras distintas operaciones (faena Iquique, oficina Santiago, proyectos internacionales e incluso casa matriz en Canadá). Converse con su jefatura y el equipo de Talento y Desarrollo sobre sus aspiraciones.',
     'programas de capacitación interna': 'Participe en nuestros programas de capacitación interna, diseñados para potenciar sus habilidades y conocimientos específicos de la industria minera y nuestro modelo operativo. Seleccione una opción para más detalles.', // Mensaje introductorio al sub-menú
-    'solicitar curso': 'Selecciona uno de nuestros cursos disponibles para solicitar tu inscripción o informa si tienes un curso externo de interés para evaluación.',
+    'solicitar curso': 'Selecciona uno de nuestros cursos disponibles para solicitar tu inscripción o informa si tienes un curso externo de interés para evaluación.', // Ya existe del paso anterior
     // --- Sub-menú: Programas de Capacitación Interna (ID: 'programasCapacitacionInterna') ---
     'capacitación dcl (desarrollo de competencias de liderazgo)': 'Nuestro programa DCL (Desarrollo de Competencias de Liderazgo) está diseñado para potenciar a nuestros líderes y supervisores en todos los niveles, desde la faena hasta la gerencia, a través de módulos presenciales y online enfocados en habilidades blandas y gestión de equipos. [Catálogo DCL](https://minerbot.sharepoint.com/sitios/Talento/DCL)',
     'capacitación en sso (seguridad y salud ocupacional)': 'Ofrecemos capacitación continua en SSO (Seguridad y Salud Ocupacional), fundamental para nuestra operación minera. Estos cursos son obligatorios y aseguran el cumplimiento de normativas y el bienestar de nuestros equipos. Consulte el calendario de inducciones y reinducciones.',
@@ -109,6 +112,5 @@ module.exports = {
     // ======================================================================================
     'consultas generales y otros': 'En esta sección encontrará información de interés general sobre MinerBot Global y opciones para consultas no resueltas.',
     'información general de la empresa': 'MinerBot Global se fundó en 1985 en Canadá, expandiendo sus operaciones a Chile en 1998 con la faena "Cerro Brillante" en Iquique. Nuestra misión es [Misión Breve de la empresa minera]. Puede encontrar más detalles sobre nuestra historia, valores, presencia global y estructura organizacional en el sitio web corporativo: [Sitio Web MinerBot Global](http://www.minerbotglobal.com)',
-    // --- INICIO CAMBIOS: NUEVO MENSAJE para 'no encontré lo que buscaba 🆘' ---
-    'no encontré lo que buscaba 🆘': 'Lamentamos no haber podido encontrar una solución inmediata. Por favor, escribe tu consulta a continuación y la enviaremos para ser revisada por el equipo correspondiente. Puedes escribir "volver" para cancelar.',
+    'no encontré lo que buscaba 🆘': 'Lamentamos no haber podido encontrar una solución inmediata. Por favor, escribe tu consulta a continuación y la enviaremos para ser revisada por el equipo correspondiente. Puedes escribir "volver" para cancelar.'
 };

@@ -5,7 +5,7 @@ dotenv.config();
 
 const KnowledgeService = require('./services/KnowledgeService');
 const EmployeeService = require('./services/EmployeeService');
-const PowerAutomateService = require('./services/PowerAutomateService');
+const PowerAutomateService = require('./services/PowerAutomateService'); // Ya debe estar importado
 
 // Menú Principal
 const MainMenu = require('../dialogs/main/MainMenu');
@@ -36,7 +36,7 @@ class MinerBot extends ActivityHandler {
         this.conversationStateAccessor = this.conversationState.createProperty('MinerBotConversationState');
 
         this.employeeService = new EmployeeService();
-        this.powerAutomateService = new PowerAutomateService();
+        this.powerAutomateService = new PowerAutomateService(); // Ya debe estar instanciado
 
         // Instancias de los menús
         this.menuInstances = {
@@ -79,8 +79,9 @@ class MinerBot extends ActivityHandler {
                         failedLoginAttempts: 0,
                         lastFailedAttemptTime: 0,
                         awaitingUserQuery: false,
-                        // --- INICIO CAMBIOS: NUEVA PROPIEDAD para Solicitud de Curso ---
-                        awaitingCourseSelection: false // ¡AÑADIDO!
+                        awaitingCourseSelection: false,
+                        // --- INICIO CAMBIOS: NUEVA PROPIEDAD para Denuncia Anónima ---
+                        awaitingAnonymousComplaint: false // ¡AÑADIDO!
                         // --- FIN CAMBIOS ---
                     });
                 }
@@ -106,13 +107,14 @@ class MinerBot extends ActivityHandler {
                 failedLoginAttempts: 0,
                 lastFailedAttemptTime: 0,
                 awaitingUserQuery: false,
-                // --- INICIO CAMBIOS: NUEVA PROPIEDAD para Solicitud de Curso ---
-                awaitingCourseSelection: false // ¡AÑADIDO!
+                awaitingCourseSelection: false,
+                // --- INICIO CAMBIOS: NUEVA PROPIEDAD para Denuncia Anónima ---
+                awaitingAnonymousComplaint: false // ¡AÑADIDO!
                 // --- FIN CAMBIOS ---
             });
 
-            // --- INICIO CAMBIOS: Lógica para priorizar awaitingUserQuery O awaitingCourseSelection ---
-            if (conversationData.awaitingUserQuery || conversationData.awaitingCourseSelection) {
+            // --- INICIO CAMBIOS: Lógica para priorizar awaitingUserQuery, awaitingCourseSelection O awaitingAnonymousComplaint ---
+            if (conversationData.awaitingUserQuery || conversationData.awaitingCourseSelection || conversationData.awaitingAnonymousComplaint) {
                 let currentMenuInstance = this.menuInstances[conversationData.currentMenuId];
                 if (currentMenuInstance && await currentMenuInstance.handleInput(context, text, conversationData, this)) {
                     await next();
@@ -133,9 +135,10 @@ class MinerBot extends ActivityHandler {
             }
 
             if (text.toLowerCase() === 'menu') {
-                // --- INICIO CAMBIOS: Resetear awaitingUserQuery Y awaitingCourseSelection ---
+                // --- INICIO CAMBIOS: Resetear todos los awaiting states ---
                 conversationData.awaitingUserQuery = false;
-                conversationData.awaitingCourseSelection = false; // ¡AÑADIDO!
+                conversationData.awaitingCourseSelection = false;
+                conversationData.awaitingAnonymousComplaint = false; // ¡AÑADIDO!
                 // --- FIN CAMBIOS ---
                 if (conversationData.isAuthenticated) {
                     conversationData.menuStack = [];
@@ -155,7 +158,7 @@ class MinerBot extends ActivityHandler {
 
             if (!handled) {
                 // --- INICIO CAMBIOS: Evitar KnowledgeService si estamos esperando entrada específica ---
-                if (conversationData.awaitingUserQuery || conversationData.awaitingCourseSelection) {
+                if (conversationData.awaitingUserQuery || conversationData.awaitingCourseSelection || conversationData.awaitingAnonymousComplaint) {
                     await context.sendActivity('Por favor, ingresa tu respuesta o escribe "volver" para cancelar.');
                     await next();
                     return;
@@ -190,17 +193,19 @@ class MinerBot extends ActivityHandler {
             failedLoginAttempts: 0,
             lastFailedAttemptTime: 0,
             awaitingUserQuery: false,
-            // --- INICIO CAMBIOS: NUEVA PROPIEDAD para Solicitud de Curso ---
-            awaitingCourseSelection: false // ¡AÑADIDO!
+            awaitingCourseSelection: false,
+            // --- INICIO CAMBIOS: NUEVA PROPIEDAD para Denuncia Anónima ---
+            awaitingAnonymousComplaint: false // ¡AÑADIDO!
             // --- FIN CAMBIOS ---
         });
 
         if (context.activity.type === 'conversationUpdate' && context.activity.membersAdded && context.activity.membersAdded.length > 0) {
             for (let member of context.activity.membersAdded) {
                 if (member.id !== context.activity.recipient.id) {
-                    // --- INICIO CAMBIOS: Resetear ambos awaiting states ---
+                    // --- INICIO CAMBIOS: Resetear todos los awaiting states ---
                     conversationData.awaitingUserQuery = false;
-                    conversationData.awaitingCourseSelection = false; // ¡AÑADIDO!
+                    conversationData.awaitingCourseSelection = false;
+                    conversationData.awaitingAnonymousComplaint = false; // ¡AÑADIDO!
                     // --- FIN CAMBIOS ---
                     if (!conversationData.isAuthenticated) {
                         await context.sendActivity('👋 Bienvenido a MinerBot Global Asistente.');
@@ -222,9 +227,10 @@ class MinerBot extends ActivityHandler {
             return;
         }
 
-        // --- INICIO CAMBIOS: Resetear ambos awaiting states al navegar ---
+        // --- INICIO CAMBIOS: Resetear todos los awaiting states al navegar ---
         conversationData.awaitingUserQuery = false;
-        conversationData.awaitingCourseSelection = false; // ¡AÑADIDO!
+        conversationData.awaitingCourseSelection = false;
+        conversationData.awaitingAnonymousComplaint = false; // ¡AÑADIDO!
         // --- FIN CAMBIOS ---
 
         if (conversationData.currentMenuId && conversationData.currentMenuId !== newMenuId) {
@@ -243,9 +249,10 @@ class MinerBot extends ActivityHandler {
             return;
         }
 
-        // --- INICIO CAMBIOS: Resetear ambos awaiting states al volver ---
+        // --- INICIO CAMBIOS: Resetear todos los awaiting states al volver ---
         conversationData.awaitingUserQuery = false;
-        conversationData.awaitingCourseSelection = false; // ¡AÑADIDO!
+        conversationData.awaitingCourseSelection = false;
+        conversationData.awaitingAnonymousComplaint = false; // ¡AÑADIDO!
         // --- FIN CAMBIOS ---
 
         const previousMenuId = conversationData.menuStack.pop();

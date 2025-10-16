@@ -1,6 +1,6 @@
-// dialogs/level1/CulturaValoresMenu.js
+// src/dialogs/level1/CulturaValoresMenu.js
 const { MessageFactory } = require('botbuilder');
-const content = require('../data/content'); // --- RUTA DE CONTENT.JS ACTUALIZADA ---
+const content = require('../data/content');
 
 class CulturaValoresMenu {
     constructor(bot) {
@@ -15,6 +15,8 @@ class CulturaValoresMenu {
     }
 
     async show(context) {
+        // La lógica de awaitingAnonymousComplaint se maneja en ProcedimientoDenunciasMenu.js,
+        // por lo que este show() simplemente muestra el menú normal.
         let menuText = '🚨 Cultura y Valores:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
@@ -29,13 +31,19 @@ class CulturaValoresMenu {
         const lower = text.toLowerCase();
         const number = parseInt(text.trim());
 
+        // --- INICIO CAMBIOS: Lógica de awaitingAnonymousComplaint ELIMINADA de aquí ---
+        // Toda la lógica para manejar `awaitingAnonymousComplaint` y el envío
+        // a Power Automate se ha movido a `ProcedimientoDenunciasMenu.js`.
+        // Este menú solo se encarga de la navegación.
+        // --- FIN CAMBIOS ---
+
+
         if (conversationData.isInInfoDisplayState && lower.includes(this.returnOption.toLowerCase())) {
             conversationData.isInInfoDisplayState = false;
             await this.show(context);
             return true;
         }
 
-        // Manejo de entrada numérica
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
@@ -52,11 +60,12 @@ class CulturaValoresMenu {
             const response = content[selectedOption.toLowerCase()];
             if (response) {
                 await context.sendActivity(response);
-                conversationData.isInInfoDisplayState = true;
-                return true;
+            } else {
+                await context.sendActivity(`Has seleccionado: "${text}" (No hay información detallada aún).`);
             }
+            conversationData.isInInfoDisplayState = true;
+            return true;
         }
-        // Lógica existente para manejar la entrada de texto
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
