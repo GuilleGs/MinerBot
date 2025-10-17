@@ -1,10 +1,20 @@
 // src/dialogs/level1/CrecimientoDesarrolloMenu.js
-const { MessageFactory } = require('botbuilder');
-const content = require('../data/content');
+const { MessageFactory } = require('botbuilder'); // Módulo para crear mensajes del bot.
+const content = require('../data/content'); // Importa el contenido estático para las respuestas del bot.
 
+/**
+ * Diálogo que gestiona el menú de "Crecimiento y Desarrollo".
+ * Ofrece opciones relacionadas con el desarrollo profesional y capacitaciones,
+ * e incluye un flujo para solicitar cursos a través de Power Automate.
+ */
 class CrecimientoDesarrolloMenu {
+    /**
+     * Inicializa el diálogo con las opciones de cursos, las opciones de menú y la referencia al bot principal.
+     * @param {object} bot - Instancia del bot principal para acceso a servicios y estados de conversación.
+     */
     constructor(bot) {
         this.bot = bot;
+        // Define las opciones de cursos disponibles para ser solicitados.
         this.courseOptions = [
             'Capacitación en Liderazgo Avanzado',
             'Gestión de Proyectos Mineros',
@@ -12,21 +22,25 @@ class CrecimientoDesarrolloMenu {
             'Tecnologías de Data Analytics para Minería',
             'Comunicación Efectiva en Equipos Multifuncionales'
         ];
-        // --- INICIO CAMBIOS: Reorganizar y renombrar opciones ---
+        // Define las opciones principales de este menú.
         this.options = [
             'Programa de trainees o becas de estudio',
             'Evaluación de desempeño y retroalimentación',
             'Planes de carrera y movilidad interna',
-            'Programas de Capacitación Interna 📚',
-            'Solicitar Curso 🎓' // Renombrado y movido
+            'Programas de Capacitación Interna', 
+            'Solicitar Curso'                     
         ];
-        // --- FIN CAMBIOS ---
-        this.returnOption = 'Volver';
+        this.returnOption = 'Volver'; // Opción estándar para regresar al menú anterior.
     }
 
+    /**
+     * Muestra el menú de "Crecimiento y Desarrollo" o la lista de cursos si el bot está esperando una selección.
+     * @param {TurnContext} context - Contexto del turno actual de la conversación.
+     */
     async show(context) {
         const conversationData = await this.bot.conversationStateAccessor.get(context);
 
+        // Si el bot está esperando que el usuario seleccione un curso, muestra la lista de cursos disponibles.
         if (conversationData.awaitingCourseSelection) {
             let courseList = 'Por favor, selecciona el número del curso que deseas solicitar:\n';
             this.courseOptions.forEach((course, index) => {
@@ -37,7 +51,8 @@ class CrecimientoDesarrolloMenu {
             return;
         }
 
-        let menuText = '📚 Crecimiento y Desarrollo:\n';
+        // Si no está esperando una selección de curso, construye y envía el menú normal.
+        let menuText = 'Crecimiento y Desarrollo:\n'; 
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
@@ -47,19 +62,31 @@ class CrecimientoDesarrolloMenu {
         await context.sendActivity(menuText);
     }
 
+    /**
+     * Procesa la entrada del usuario para este menú.
+     * Maneja la selección de cursos, el envío de solicitudes a Power Automate, la navegación y la visualización de información.
+     * @param {TurnContext} context - Contexto del turno actual de la conversación.
+     * @param {string} text - Texto del mensaje enviado por el usuario.
+     * @param {object} conversationData - Objeto que contiene el estado de la conversación.
+     * @param {object} bot - Instancia del bot principal para funciones de servicio y navegación.
+     * @returns {Promise<boolean>} Retorna true si la entrada fue manejada por este diálogo, false en caso contrario.
+     */
     async handleInput(context, text, conversationData, bot) {
-        const lower = text.toLowerCase();
-        const number = parseInt(text.trim());
+        const lower = text.toLowerCase(); // Convierte la entrada a minúsculas.
+        const number = parseInt(text.trim()); // Intenta parsear la entrada como número.
 
+        // Lógica principal: Gestiona la entrada si el bot está esperando la selección de un curso.
         if (conversationData.awaitingCourseSelection) {
+            // Permite al usuario cancelar la solicitud de curso.
             if (lower === this.returnOption.toLowerCase() || lower === 'cancelar') {
-                conversationData.awaitingCourseSelection = false;
+                conversationData.awaitingCourseSelection = false; // Desactiva el estado de espera.
                 await context.sendActivity('Solicitud de curso cancelada. Volviendo al menú de Crecimiento y Desarrollo.');
-                await this.show(context);
+                await this.show(context); // Muestra el menú nuevamente.
                 return true;
             }
 
             let selectedCourse = null;
+            // Intenta identificar el curso seleccionado por número o por texto.
             if (!isNaN(number) && number > 0 && number <= this.courseOptions.length) {
                 selectedCourse = this.courseOptions[number - 1];
             } else {
@@ -67,6 +94,7 @@ class CrecimientoDesarrolloMenu {
             }
 
             if (selectedCourse) {
+                // Recopila los datos del empleado del estado de la conversación y el curso seleccionado.
                 const dataToSend = {
                     nombreEmpleado: conversationData.employeeName,
                     rutEmpleado: conversationData.employeeRut,
@@ -75,93 +103,95 @@ class CrecimientoDesarrolloMenu {
                     cursoSolicitado: selectedCourse
                 };
 
+                // Envía la solicitud de curso al flujo de Power Automate a través del servicio centralizado.
                 const success = await this.bot.powerAutomateService.sendCourseRequest(dataToSend);
 
+                // Responde al usuario según el resultado del envío a Power Automate.
                 if (success) {
-                    await context.sendActivity(`✅ Tu solicitud para el curso "${selectedCourse}" ha sido enviada al área de Talento y Desarrollo. Te contactarán pronto con los siguientes pasos.`);
+                    await context.sendActivity(`Su solicitud para el curso "${selectedCourse}" ha sido enviada al área de Talento y Desarrollo. Le contactarán pronto con los siguientes pasos.`); 
                 } else {
-                    await context.sendActivity('Hubo un problema al enviar tu solicitud de curso. Por favor, intenta de nuevo más tarde o contacta a Talento y Desarrollo.');
+                    await context.sendActivity('Hubo un problema al enviar su solicitud de curso. Por favor, intente de nuevo más tarde o contacte a Talento y Desarrollo.');
                 }
 
-                conversationData.awaitingCourseSelection = false;
-                conversationData.isInInfoDisplayState = false;
-                await this.show(context);
+                conversationData.awaitingCourseSelection = false; // Desactiva el estado de espera.
+                conversationData.isInInfoDisplayState = false; // Sale del estado de visualización de información.
+                await this.show(context); // Vuelve a mostrar el menú general de Crecimiento y Desarrollo.
                 return true;
             } else {
-                await context.sendActivity('Opción de curso no reconocida. Por favor, selecciona un número válido o escribe el nombre del curso, o "volver" para cancelar.');
+                await context.sendActivity('Opción de curso no reconocida. Por favor, seleccione un número válido o escriba el nombre del curso, o "volver" para cancelar.');
                 return true;
             }
         }
 
-
+        // Maneja la acción "Volver" cuando el bot está mostrando información estática.
         if (conversationData.isInInfoDisplayState && lower.includes(this.returnOption.toLowerCase())) {
             conversationData.isInInfoDisplayState = false;
             await this.show(context);
             return true;
         }
 
+        // Procesa la entrada si es un número válido de una opción de menú o "Volver".
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
+            // Si la opción es "Volver".
             if (selectedOption.toLowerCase().includes(this.returnOption.toLowerCase())) {
                 await bot.goBack(context, conversationData);
                 return true;
             }
 
-            // --- INICIO CAMBIOS: Lógica para 'Solicitar Curso' ---
-            // Usamos .includes() para ser más flexibles, ya que ahora podría ser por número o por texto
+            // Si la opción es "Solicitar Curso", activa el flujo de selección de curso.
             if (selectedOption.toLowerCase().includes('solicitar curso')) {
-                conversationData.awaitingCourseSelection = true;
-                // No enviamos un mensaje de content.js aquí, el show() ya manejará el prompt de la lista de cursos
-                await this.show(context); // Esto mostrará la lista de cursos disponibles
+                conversationData.awaitingCourseSelection = true; // Activa el estado de espera.
+                await this.show(context); // Muestra la lista de cursos disponibles.
                 return true;
             }
-            // --- FIN CAMBIOS ---
 
+            // Si la opción es "Programas de Capacitación Interna", navega a ese sub-menú.
             if (selectedOption.toLowerCase().includes('programas de capacitación interna')) {
                 await bot.navigateToMenu(context, conversationData, 'programasCapacitacionInterna');
                 return true;
             }
 
+            // Busca y muestra la respuesta estática desde 'content.js'.
             const response = content[selectedOption.toLowerCase()];
             if (response) {
                 await context.sendActivity(response);
-            } else {
-                // Mensaje genérico para opciones sin contenido específico en content.js (ej: opciones base del menú)
-                await context.sendActivity(`Has seleccionado: "${text}" (No hay información detallada aún o es una opción de navegación).`);
+                conversationData.isInInfoDisplayState = true; // Entra en estado de visualización.
+                return true;
             }
-            conversationData.isInInfoDisplayState = true;
-            return true;
         }
+        // Procesa la entrada si es el texto "Volver".
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
         }
-        // --- INICIO CAMBIOS: Lógica para 'Solicitar Curso' por texto ---
+        // Procesa la entrada si es el texto "Solicitar Curso".
         else if (lower.includes('solicitar curso')) {
-            conversationData.awaitingCourseSelection = true;
-            await this.show(context); // Esto mostrará la lista de cursos disponibles
+            conversationData.awaitingCourseSelection = true; // Activa el estado de espera.
+            await this.show(context); // Muestra la lista de cursos disponibles.
             return true;
         }
-        // --- FIN CAMBIOS ---
+        // Procesa la entrada si es el texto "Programas de Capacitación Interna".
         else if (lower.includes('programas de capacitación interna')) {
             await bot.navigateToMenu(context, conversationData, 'programasCapacitacionInterna');
             return true;
         }
 
+        // Fallback: Si la entrada coincide con una opción informativa, la busca en content.js.
         const matchedOption = this.options.find(opt => opt.toLowerCase() === lower);
         if (matchedOption) {
             const response = content[lower];
             if (response) {
                 await context.sendActivity(response);
             } else {
-                await context.sendActivity(`Has seleccionado: "${text}" (No hay información detallada aún).`);
+                await context.sendActivity(`Ha seleccionado: "${text}" (Información detallada no disponible).`);
             }
             conversationData.isInInfoDisplayState = true;
             return true;
         }
 
-        return false;
+        return false; // Indica que la entrada no fue manejada por este diálogo.
     }
 }
 

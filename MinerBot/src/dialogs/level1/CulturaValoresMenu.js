@@ -1,94 +1,116 @@
 // src/dialogs/level1/CulturaValoresMenu.js
-const { MessageFactory } = require('botbuilder');
-const content = require('../data/content');
+const { MessageFactory } = require('botbuilder'); // Módulo para crear mensajes del bot.
+const content = require('../data/content'); // Importa el contenido estático para las respuestas del bot.
 
+/**
+ * Diálogo que gestiona el menú de "Cultura y Valores".
+ * Presenta opciones relacionadas con el código de ética, valores corporativos y canales de reporte.
+ * Permite la navegación al sub-menú de "Procedimiento para Denuncias".
+ */
 class CulturaValoresMenu {
+    /**
+     * Inicializa el diálogo con las opciones de menú y la referencia al bot principal.
+     * @param {object} bot - Instancia del bot principal para acceso a estados y navegación.
+     */
     constructor(bot) {
         this.bot = bot;
+        // Define las opciones principales de este menú.
         this.options = [
             'Código de ética y conducta',
             'Valores corporativos y compromisos de diversidad',
             'Canales de reporte confidencial',
-            'Procedimiento para Denuncias 🚨'
+            'Procedimiento para Denuncias' 
         ];
-        this.returnOption = 'Volver';
+        this.returnOption = 'Volver'; // Opción estándar para regresar al menú anterior.
     }
 
+    /**
+     * Muestra el menú de "Cultura y Valores" al usuario, listando todas las opciones disponibles.
+     * @param {TurnContext} context - Contexto del turno actual de la conversación.
+     */
     async show(context) {
-        // La lógica de awaitingAnonymousComplaint se maneja en ProcedimientoDenunciasMenu.js,
-        // por lo que este show() simplemente muestra el menú normal.
-        let menuText = '🚨 Cultura y Valores:\n';
+        // La lógica para manejar el estado 'awaitingAnonymousComplaint' ha sido trasladada a 'ProcedimientoDenunciasMenu.js'.
+        // Este método solo se encarga de presentar las opciones estándar de este menú.
+        let menuText = 'Cultura y Valores:\n';
         this.options.forEach((option, index) => {
             menuText += `${index + 1}. ${option}\n`;
         });
         menuText += `${this.options.length + 1}. ${this.returnOption}\n`;
         menuText += '\nPor favor, escribe el número o el nombre de la opción.';
 
-        await context.sendActivity(menuText);
+        await context.sendActivity(menuText); // Envía el menú al usuario.
     }
 
+    /**
+     * Procesa la entrada del usuario para este menú.
+     * Maneja la selección de opciones, la navegación al sub-menú de denuncias y la acción de "Volver".
+     * @param {TurnContext} context - Contexto del turno actual de la conversación.
+     * @param {string} text - Texto del mensaje enviado por el usuario.
+     * @param {object} conversationData - Objeto que contiene el estado de la conversación.
+     * @param {object} bot - Instancia del bot principal para funciones de navegación.
+     * @returns {Promise<boolean>} Retorna true si la entrada fue manejada por este menú, false en caso contrario.
+     */
     async handleInput(context, text, conversationData, bot) {
-        const lower = text.toLowerCase();
-        const number = parseInt(text.trim());
+        const lower = text.toLowerCase(); // Convierte la entrada a minúsculas.
+        const number = parseInt(text.trim()); // Intenta parsear la entrada como número.
 
-        // --- INICIO CAMBIOS: Lógica de awaitingAnonymousComplaint ELIMINADA de aquí ---
-        // Toda la lógica para manejar `awaitingAnonymousComplaint` y el envío
-        // a Power Automate se ha movido a `ProcedimientoDenunciasMenu.js`.
-        // Este menú solo se encarga de la navegación.
-        // --- FIN CAMBIOS ---
-
-
+        // Maneja la acción "Volver" cuando el bot está mostrando información estática.
         if (conversationData.isInInfoDisplayState && lower.includes(this.returnOption.toLowerCase())) {
-            conversationData.isInInfoDisplayState = false;
-            await this.show(context);
+            conversationData.isInInfoDisplayState = false; // Sale del estado de visualización.
+            await this.show(context); // Muestra el menú nuevamente.
             return true;
         }
 
+        // Procesa la entrada si es un número válido que corresponde a una opción del menú o a "Volver".
         if (!isNaN(number) && number > 0 && number <= this.options.length + 1) {
             const selectedOption = (number === this.options.length + 1) ? this.returnOption : this.options[number - 1];
 
+            // Si la opción seleccionada es "Volver".
             if (selectedOption.toLowerCase().includes(this.returnOption.toLowerCase())) {
                 await bot.goBack(context, conversationData);
                 return true;
             }
 
+            // Si la opción seleccionada es "Procedimiento para Denuncias", navega a ese sub-menú.
             if (selectedOption.toLowerCase().includes('procedimiento para denuncias')) {
                 await bot.navigateToMenu(context, conversationData, 'procedimientoDenuncias');
                 return true;
             }
 
+            // Busca y muestra la respuesta estática desde 'content.js'.
             const response = content[selectedOption.toLowerCase()];
             if (response) {
                 await context.sendActivity(response);
-            } else {
-                await context.sendActivity(`Has seleccionado: "${text}" (No hay información detallada aún).`);
+                conversationData.isInInfoDisplayState = true; // Entra en estado de visualización.
+                return true;
             }
-            conversationData.isInInfoDisplayState = true;
-            return true;
         }
+        // Procesa la entrada si es el texto "Volver".
         else if (lower.includes(this.returnOption.toLowerCase())) {
             await bot.goBack(context, conversationData);
             return true;
         }
 
+        // Procesa la entrada si es el texto "Procedimiento para Denuncias".
         if (lower.includes('procedimiento para denuncias')) {
             await bot.navigateToMenu(context, conversationData, 'procedimientoDenuncias');
             return true;
         }
 
+        // Fallback: Si la entrada coincide con una opción informativa, la busca en content.js.
         const matchedOption = this.options.find(opt => opt.toLowerCase() === lower);
         if (matchedOption) {
             const response = content[lower];
             if (response) {
                 await context.sendActivity(response);
             } else {
-                await context.sendActivity(`Has seleccionado: "${text}" (No hay información detallada aún).`);
+                await context.sendActivity(`Ha seleccionado: "${text}" (Información detallada no disponible).`);
             }
             conversationData.isInInfoDisplayState = true;
             return true;
         }
 
-        return false;
+        return false; // Indica que la entrada no fue manejada por este diálogo.
     }
 }
 
