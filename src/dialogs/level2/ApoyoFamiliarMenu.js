@@ -84,12 +84,19 @@ class ApoyoFamiliarMenu {
             }
 
             // Acción 2: Para cualquier otra opción, busca y muestra la respuesta estática.
-            const response = content[selectedOption.toLowerCase()];
+            let response = content[selectedOption.toLowerCase()];
             
             if (response) {
-                await context.sendActivity(response);
-                conversationData.isInInfoDisplayState = true;
-                return true;
+                // Si el contenido es un objeto (p.ej. por sede), seleccionar la variante apropiada.
+                if (typeof response === 'object' && response !== null) {
+                    const sedeKey = conversationData && conversationData.employeeSedeId ? String(conversationData.employeeSedeId) : 'default';
+                    response = response[sedeKey] || response.default || Object.values(response)[0];
+                }
+                if (response) {
+                    await context.sendActivity(response);
+                    conversationData.isInInfoDisplayState = true;
+                    return true;
+                }
             }
         }
 

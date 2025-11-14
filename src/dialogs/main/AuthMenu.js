@@ -107,7 +107,8 @@ class AuthMenu {
         conversationData.employeeId = employeeData.ID_Empleado;
         conversationData.employeeName = `${employeeData.Nombre} ${employeeData.ApellidoPaterno}`;
         conversationData.employeeEmail = employeeData.EmailCorporativo;
-        conversationData.employeeSede = employeeData.Sede;
+        // Convertir Sede a string para que coincida con las claves en content.js ('1', '2', '3', 'default')
+        conversationData.employeeSede = String(employeeData.Sede);
         conversationData.employeeSedeId = employeeData.ID_Sede;
         conversationData.employeeRut = employeeData.Rut;
         conversationData.employeeArea = employeeData.Area;
