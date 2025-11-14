@@ -2,15 +2,11 @@
 
 const { MessageFactory } = require('botbuilder');
 const content = require('../data/content');
-// Importamos el helper que se encargará de seleccionar el contenido correcto.
-const { getPersonalizedContent } = require('../../bot/contentHelper');
 
 /**
  * Diálogo que gestiona el menú de "Salud y Seguros".
  * Este diálogo sirve como punto de entrada a información sobre salud, seguros,
  * y como enrutador hacia el sub-menú de tipos de seguros.
- * Es un ejemplo clave del uso de `getPersonalizedContent` para mostrar información
- * específica de la sede del usuario.
  */
 class SaludSegurosMenu {
     /**
@@ -93,15 +89,19 @@ class SaludSegurosMenu {
                 return true;
             }
 
-            // Para las opciones informativas, llamamos a getPersonalizedContent.
-            // Se usa 'await' para que funcione correctamente incluso si en el futuro
-            // el helper necesita hacer llamadas asíncronas (como a una API).
-            const response = await getPersonalizedContent(selectedOptionLower, conversationData);
-            
+            // Para las opciones informativas, muestra el contenido estático.
+            let response = content[selectedOptionLower];
             if (response) {
-                await context.sendActivity(response);
-                conversationData.isInInfoDisplayState = true;
-                return true;
+                // Si el contenido es un objeto (p.ej. por sede), seleccionar la variante apropiada.
+                if (typeof response === 'object' && response !== null) {
+                    const sedeKey = conversationData && conversationData.employeeSedeId ? String(conversationData.employeeSedeId) : 'default';
+                    response = response[sedeKey] || response.default || Object.values(response)[0];
+                }
+                if (response) {
+                    await context.sendActivity(response);
+                    conversationData.isInInfoDisplayState = true;
+                    return true;
+                }
             }
         }
 
