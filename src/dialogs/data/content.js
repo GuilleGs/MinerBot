@@ -15,21 +15,13 @@ module.exports = {
     // ======================================================================================
     'vacaciones, licencias y permisos': 'Bienvenido a la sección de Vacaciones, Licencias y Permisos de MinerBot Global. Aquí encontrará información relevante sobre sus derechos y los procedimientos aplicables tanto para faena como para oficina.',
     'solicitar vacaciones': 'Para gestionar su solicitud de vacaciones, por favor, acceda a la plataforma de Autogestión de Personal "MinePortal" a través de la Intranet Corporativa. Allí podrá verificar su saldo de días disponibles y gestionar su solicitud, la cual debe ser aprobada por su jefatura directa y RRHH. Recomendamos solicitar con al menos 30 días de anticipación, especialmente para turnos de faena. [Acceso MinePortal](https://intranet.minerbot.com/mineportal/vacaciones)',
-    'consultar saldo de vacaciones': 'Su saldo de vacaciones puede ser consultado en cualquier momento iniciando sesión en "MinePortal" (módulo de Autogestión). El sistema refleja los días acumulados según su tipo de contrato y régimen de jornada. Para cualquier discrepancia, contacte a su Gestor de RRHH.',
-    
-    // MODIFICADO: Procedimiento de licencia médica
-    'procedimiento de licencia médica': {
-        // Sede 2: Iquique / Faena
-        '2': 'En caso de licencia médica, es fundamental notificar a su supervisor directo y al Policlínico de Faena en un plazo máximo de 12 horas. La licencia debe ser enviada electrónicamente a RRHH Faena en un plazo no mayor a 2 días hábiles. [Política de Licencias Faena](https://minerbot.sharepoint.com/sitios/RRHH/politicas/licencias-faena)',
-        
-        // Sede 3: Canadá / HQ
-        '3': 'In case of illness, you must notify your manager as per the "Sick Leave Policy". For leaves exceeding 3 days, please log it in Workday for Short-Term Disability (STD) consideration. Contact HR Canada for the official policy. [Link to Workday](https://intranet.minerbot.com/workday)',
-        
-        // default: Santiago / Oficina
-        'default': 'En caso de licencia médica, es fundamental notificar a su supervisor directo y al departamento de Recursos Humanos (RRHH) en un plazo máximo de 24 horas. La licencia médica original o su copia electrónica validada debe ser presentada en RRHH en un plazo no mayor a 3 días hábiles desde el inicio de la licencia. [Política de Licencias Médicas](https://minerbot.sharepoint.com/sitios/RRHH/politicas/licencias)'
-    },
+    'consultar saldo de vacaciones': 'Su saldo de vacaciones puede ser consultado en cualquier momento iniciando sesión en "MinePortal" (módulo de Autogestión). El sistema refleja los días acumulados según su tipo de contrato y régimen de jornada. Para cualquier discrepancia, contacte a su Gestor de RRHH.',
     
-    'tipos de permisos legales': 'Dentro de los permisos legales, MinerBot Global reconoce varias categorías conforme a la legislación vigente y nuestras políticas internas. Por favor, seleccione la opción que le interese para obtener más detalles.', // Mensaje introductorio al sub-menú
+    'procedimiento de licencia médica': {
+        '2': 'En caso de licencia médica, es fundamental notificar a su supervisor directo y al Policlínico de Faena en un plazo máximo de 12 horas. La licencia debe ser enviada electrónicamente a RRHH Faena en un plazo no mayor a 2 días hábiles. [Política de Licencias Faena](https://minerbot.sharepoint.com/sitios/RRHH/politicas/licencias-faena)',
+        '3': 'In case of illness, you must notify your manager as per the "Sick Leave Policy". For leaves exceeding 3 days, please log it in Workday for Short-Term Disability (STD) consideration. Contact HR Canada for the official policy. [Link to Workday](https://intranet.minerbot.com/workday)',
+        'default': 'En caso de licencia médica, es fundamental notificar a su supervisor directo y al departamento de Recursos Humanos (RRHH) en un plazo máximo de 24 horas. La licencia médica original o su copia electrónica validada debe ser presentada en RRHH en un plazo no mayor a 3 días hábiles desde el inicio de la licencia. [Política de Licencias Médicas](https://minerbot.sharepoint.com/sitios/RRHH/politicas/licencias)'
+    },    'tipos de permisos legales': 'Dentro de los permisos legales, MinerBot Global reconoce varias categorías conforme a la legislación vigente y nuestras políticas internas. Por favor, seleccione la opción que le interese para obtener más detalles.', // Mensaje introductorio al sub-menú
 
     // --- Sub-menú: Tipos de Permisos Legales ---
     'permiso por matrimonio': 'Se otorgan 5 días hábiles consecutivos de permiso por matrimonio o unión civil. Este permiso debe ser solicitado a su jefatura con un mínimo de 30 días de anticipación, adjuntando el certificado de matrimonio o unión civil. Aplicable a todo el personal, incluyendo rotaciones en faena.',
@@ -44,29 +36,19 @@ module.exports = {
     'bonos de desempeño': 'Los bonos de desempeño se evalúan anualmente, basados en el cumplimiento de objetivos estratégicos individuales y departamentales, así como en los resultados generales de la compañía. Los criterios y montos específicos se comunican a principios de cada año fiscal a través del comunicado "MinerBot Rewards". Para más información, consulte la Política de Compensaciones en nuestro SharePoint de RRHH.',
     'asignación de escolaridad': 'La asignación de escolaridad es un beneficio dirigido a los empleados con hijos en edad escolar, buscando apoyar la educación de las nuevas generaciones. Los requisitos de postulación, plazos y los montos se publican anualmente. Las solicitudes se gestionan a través del módulo "FamilySupport" en MinePortal.',
     
-    // MODIFICADO: Aguinaldos y gratificaciones (muy local)
-    'aguinaldos y gratificaciones': {
-        // Sede 2: Iquique / Faena
+    
+    'aguinaldos y gratificaciones': {
         '2': 'MinerBot Global otorga aguinaldos en Fiestas Patrias y Navidad. Las gratificaciones legales se pagan anualmente según los resultados financieros de la compañía en Chile. Todos los detalles se informan en los comunicados internos de "MinerBot News".',
-        
-        // Sede 3: Canadá / HQ
         '3': 'MinerBot Global offers a "Holiday Bonus" in December. Annual performance bonuses are paid in March based on company and individual performance. These are separate from Canadian statutory requirements.',
-        
-        // default: Santiago / Oficina
         'default': 'MinerBot Global otorga aguinaldos en Fiestas Patrias y Navidad. Las gratificaciones legales se pagan anualmente según los resultados financieros de la compañía en Chile. Todos los detalles se informan en los comunicados internos de "MinerBot News".'
     },
     
     'viáticos y reembolsos': 'Para la gestión de viáticos y reembolsos de gastos corporativos, por favor, utilice el sistema de gestión de gastos "ExpenseTrack" disponible en la Intranet de MinerBot Global. Es imprescindible adjuntar todos los comprobantes y seguir rigurosamente la Política de Viáticos y Gastos, disponible en SharePoint. [Acceso ExpenseTrack](https://intranet.minerbot.com/expensetrack)',
     
-    // MODIFICADO: Descuentos corporativos (muy local)
-    'descuentos corporativos': {
-        // Sede 2: Iquique / Faena
+    
+    'descuentos corporativos': {
         '2': 'Contamos con convenios y descuentos especiales para personal de faena, incluyendo beneficios en la ZOFRI, convenios con gimnasios en Iquique y descuentos en servicios locales. La lista completa está en el "Portal de Beneficios" de MinePortal. [Portal de Beneficios](https://intranet.minerbot.com/mineportal/beneficios-faena)',
-        
-        // Sede 3: Canadá / HQ
         '3': 'Our corporate discount program includes partnerships with GoodLife Fitness, discounts on public transit (PRESTO Pass), and access to the Perkopolis portal. Check the "Benefits Canada" SharePoint for details.',
-        
-        // default: Santiago / Oficina
         'default': 'Contamos con convenios y descuentos especiales en una amplia gama de productos y servicios (salud, educación, comercio minorista, gimnasios en Santiago). La lista completa está disponible en el "Portal de Beneficios" dentro de MinePortal. [Portal de Beneficios](https://intranet.minerbot.com/mineportal/beneficios)'
     },
 
@@ -75,29 +57,19 @@ module.exports = {
     // ======================================================================================
     'salud y seguros': 'Explore nuestros beneficios y procedimientos relacionados con salud, bienestar ocupacional y seguros, vitales para un entorno minero seguro.',
     
-    // MODIFICADO: Reembolso (añadida Sede 3)
-    'procedimiento de reembolso médico/dental': {
-        // Sede 2: Iquique / Faena (Tu lógica original)
+    
+    'procedimiento de reembolso médico/dental': {
         '2': 'Para solicitar reembolsos en su plan con **Aseguradora Andina**, debe usar el portal online de la aseguradora. El procedimiento completo y el enlace directo están en SharePoint. [Formulario Reembolso Sede 2](https://minerbot.sharepoint.com/sitios/Salud/reembolsos-sede2)',
-        
-        // Sede 3: Canadá / HQ
         '3': 'All medical and dental claims must be submitted through the **Sun Life Benefits** online portal or mobile app. Please refer to our Group Benefits package for co-pay details. [Sun Life Portal](https://www.sunlife.ca/member)',
-        
-        // default: Santiago / Oficina (Tu lógica original)
         'default': 'Para solicitar reembolsos en su plan con **Consorcio Salud Minera**, debe presentar las boletas originales y el formulario en la oficina de RRHH de su sede. Acceda al formulario y la política en SharePoint. [Formulario Reembolso General](https://minerbot.sharepoint.com/sitios/Salud/reembolsos-general)'
     },
     
     'beneficios de salud mental': 'MinerBot Global se preocupa por su bienestar integral. Ofrecemos acceso a sesiones de apoyo psicológico confidencial a través de nuestra red de proveedores y talleres de manejo de estrés. Contacte a su Gestor de RRHH para conocer las opciones disponibles y coordinar su atención, tanto en faena como en oficina.',
     
-    // MODIFICADO: Seguro de vida y accidentes (muy local)
-    'seguro de vida y cobertura en accidentes laborales': {
-        // Sede 2: Iquique / Faena
+    
+    'seguro de vida y cobertura en accidentes laborales': {
         '2': 'Todos los colaboradores cuentan con un seguro de vida colectivo y la cobertura de la **Mutual de Seguridad** (Ley 16.744) para accidentes del trabajo y enfermedades profesionales. En caso de accidente, reporte inmediatamente a su supervisor y al Policlínico.',
-        
-        // Sede 3: Canadá / HQ
         '3': 'All full-time employees are covered by our group Life Insurance policy via **Sun Life**. Workplace accidents are covered by the **WSIB** (Workplace Safety and Insurance Board) for Ontario. Report any incidents immediately to your manager and H&S.',
-        
-        // default: Santiago / Oficina
         'default': 'Todos los colaboradores cuentan con un seguro de vida colectivo y la cobertura de la **Mutual de Seguridad** (Ley 16.744) para accidentes del trabajo y enfermedades profesionales. En caso de accidente en oficina o trayecto, reporte a su supervisor y a RRHH.'
     },
 
@@ -113,27 +85,16 @@ module.exports = {
     // ======================================================================================
     'bienestar y conciliación': 'Descubra las iniciativas que fomentan su bienestar integral y facilitan la conciliación entre su vida personal y profesional, considerando los desafíos de la operación minera.',
     
-    // MODIFICADO: Programas de bienestar (muy específico del sitio)
-    'programas de bienestar físico y psicológico': {
-        // Sede 2: Iquique / Faena
+    
+    'programas de bienestar físico y psicológico': {
         '2': 'Promovemos su salud con acceso completo a las instalaciones del campamento (gimnasio, canchas, salas de cine), talleres de nutrición y pausas activas en faena. El apoyo psicológico está disponible 24/7 en el Policlínico.',
-        
-        // Sede 3: Canadá / HQ
         '3': 'We support your well-being through our Employee Assistance Program (EAP) for confidential psychological support, corporate gym memberships (GoodLife), and ergonomic assessments for your workspace.',
-        
-        // default: Santiago / Oficina
         'default': 'Promovemos su salud con convenios de gimnasios en Santiago, clases de yoga online, talleres de nutrición, pausas activas y soporte psicológico a través de nuestra red de proveedores externos.'
     },
     
-    // MODIFICADO: Conciliación (muy diferente por rol)
-    'iniciativas de conciliación vida-trabajo': {
-        // Sede 2: Iquique / Faena
+    'iniciativas de conciliación vida-trabajo': {
         '2': 'Nuestra principal política de conciliación es el sistema de turnos rotativos (ej. 7x7), que permite 7 días de descanso continuo. El teletrabajo no es aplicable a roles operativos. Hable con RRHH Faena sobre permisos especiales.',
-        
-        // Sede 3: Canadá / HQ
         '3': 'We offer a hybrid work model (3 days in-office, 2 remote), flexible working hours subject to manager approval, and "Summer Fridays" (half-days) from June to August.',
-        
-        // default: Santiago / Oficina
         'default': 'Impulsamos un equilibrio saludable con un modelo de teletrabajo híbrido (3 días presencial, 2 remoto), flexibilidad horaria (sujeto a rol) y "Viernes Corto" (salida a las 14:00 hrs todo el año).'
     },
 
