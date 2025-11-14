@@ -18,7 +18,6 @@ class ProgramasInternosMenu {
         // La clave en content.js para '“vivetarapaca”' es problemática.
         // La opción de menú se normaliza aquí para asegurar una coincidencia limpia.
         this.options = [
-            'ViveTarapacá',
             'Voluntariado Corporativo',
             'Club Deportivo'
         ];

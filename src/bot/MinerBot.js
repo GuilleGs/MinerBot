@@ -24,7 +24,7 @@ const TiposSegurosSaludMenu = require('../dialogs/level2/TiposSegurosSaludMenu')
 const ProgramasInternosMenu = require('../dialogs/level2/ProgramasInternosMenu');
 const ApoyoFamiliarMenu = require('../dialogs/level2/ApoyoFamiliarMenu');
 const ProcedimientoDenunciasMenu = require('../dialogs/level2/ProcedimientoDenunciasMenu');
-const ProgramasCapacitacionInternaMenu = require('../dialogs/level2/ProgramasCapacitacionInternaMenu');
+// Eliminada la importación de ProgramasCapacitacionInternaMenu porque ya no se usa.
 
 /**
  * Clase principal del bot conversacional "MinerBot Global Asistente".
@@ -62,7 +62,7 @@ class MinerBot extends ActivityHandler {
             programasInternos: new ProgramasInternosMenu(this),
             apoyoFamiliar: new ApoyoFamiliarMenu(this),
             procedimientoDenuncias: new ProcedimientoDenunciasMenu(this),
-            programasCapacitacionInterna: new ProgramasCapacitacionInternaMenu(this)
+            // Se eliminó la instancia `programasCapacitacionInterna` asociada al diálogo removido.
         };
 
         this.onMembersAdded(async (context, next) => {

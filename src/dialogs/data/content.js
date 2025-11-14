@@ -41,7 +41,7 @@ module.exports = {
     'salud y seguros': 'Explore nuestros beneficios y procedimientos relacionados con salud, bienestar ocupacional y seguros, vitales para un entorno minero seguro.',
     'procedimiento de reembolso médico/dental': {
     // Mensaje para Sede 1
-    '1': 'Para solicitar reembolsos en su plan con **Aseguradora Andina**, debe usar el portal online de la aseguradora. El procedimiento completo y el enlace directo están en SharePoint. [Formulario Reembolso Sede 1](https://minerbot.sharepoint.com/sitios/Salud/reembolsos-sede1)',
+    '2': 'Para solicitar reembolsos en su plan con **Aseguradora Andina**, debe usar el portal online de la aseguradora. El procedimiento completo y el enlace directo están en SharePoint. [Formulario Reembolso Sede 1](https://minerbot.sharepoint.com/sitios/Salud/reembolsos-sede1)',
     
     // Mensaje por defecto para todas las demás sedes (2, 3, etc.)
     'default': 'Para solicitar reembolsos en su plan con **Consorcio Salud Minera**, debe presentar las boletas originales y el formulario en la oficina de RRHH de su sede. Acceda al formulario y la política en SharePoint. [Formulario Reembolso General](https://minerbot.sharepoint.com/sitios/Salud/reembolsos-general)'},
@@ -64,7 +64,6 @@ module.exports = {
     'apoyo familiar': 'MinerBot Global brinda diversas formas de apoyo para usted y su familia, reconociendo la importancia del núcleo familiar para nuestros colaboradores. Seleccione una opción para obtener información detallada.', // Mensaje introductorio al sub-menú
 
     // --- Sub-menú: Programas Internos ---
-    '“vivetarapaca”': 'El programa "ViveTarapacá" es una iniciativa exclusiva para el personal de Faena Cerro Brillante. Busca fomentar la cultura local, el esparcimiento y el bienestar a través de actividades recreativas, deportivas y culturales en la región de Iquique. Consulte la programación mensual en el tablero de anuncios de faena y en el SharePoint del Campamento.',
     'voluntariado corporativo': 'Participe en nuestro programa de Voluntariado Corporativo "MinerBot Solidario". Contribuya a la comunidad local en proyectos sociales y ambientales en las regiones donde operamos. Las inscripciones y eventos se anuncian en la Intranet y por correo electrónico.',
     'club deportivo': 'Únase al Club Deportivo de MinerBot Global. Ofrecemos diversas disciplinas y actividades para fomentar la vida sana y el compañerismo entre los colaboradores de oficina y faena. Contacte a la secretaría del club para inscribirse o al coordinador de Bienestar.',
 

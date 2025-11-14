@@ -28,14 +28,12 @@ class CrecimientoDesarrolloMenu {
             'Programa de trainees o becas de estudio',
             'Evaluación de desempeño y retroalimentación',
             'Planes de carrera y movilidad interna',
-            'Programas de Capacitación Interna',
             'Solicitar Curso'
         ];
         this.returnOption = 'Volver';
         
-        this.navigationMap = {
-            'programas de capacitación interna': 'programasCapacitacionInterna'
-        };
+        // No hay navegación a un sub-menú de "Programas de Capacitación Interna".
+        this.navigationMap = {};
     }
 
     /**
