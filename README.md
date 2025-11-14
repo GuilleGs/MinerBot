@@ -17,9 +17,7 @@
 - [Arquitectura](#arquitectura)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Desarrollo](#desarrollo)
-- [Deployment](#deployment)
 - [Troubleshooting](#troubleshooting)
-- [Contribución](#contribución)
 
 ## 📊 Descripción General
 
