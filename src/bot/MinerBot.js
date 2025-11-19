@@ -121,7 +121,6 @@ class MinerBot extends ActivityHandler {
             if (!handled) {
                 const answer = await this.knowledgeService.ask(text);
 
-                // --- INICIO DE LA CORRECCIÓN ---
                 // Preparamos los datos para el log con la nueva estructura correcta.
                 // Hemos cambiado 'employeeName' y 'queryText' por los campos que Power Automate espera.
                 const logData = {
@@ -133,7 +132,6 @@ class MinerBot extends ActivityHandler {
                 
                 // Llamamos al servicio de Power Automate para registrar la interacción.
                 this.powerAutomateService.logQnaQuery(logData);
-                // --- FIN DE LA CORRECCIÓN ---
 
                 if (answer && answer !== 'No encontré una respuesta en la base de conocimientos.') {
                     await context.sendActivity(answer);
